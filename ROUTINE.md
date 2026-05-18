@@ -72,8 +72,8 @@ below.
    - One `DigestSection` per source with ≥1 new entry. Emoji + label map:
      - `claude-code` → emoji `⚡`, label `claude-code`, sourceHomeUrl `https://code.claude.com/docs/en/changelog`
      - `claude-agent-sdk` → emoji `🤖`, label `Claude Agent SDK`, sourceHomeUrl `https://github.com/anthropics/claude-agent-sdk-typescript/releases`
-     - `codex` → emoji `🟢`, label `Codex`, sourceHomeUrl `https://developers.openai.com/codex/changelog?type=codex-app`
-     - `openai-sdk` → emoji `🧬`, label `OpenAI SDK`, sourceHomeUrl `https://developers.openai.com/api/docs/changelog`
+     - `codex` → emoji `🟢`, label `Codex`, sourceHomeUrl `https://github.com/openai/codex/releases`
+     - `openai-sdk` → emoji `🧬`, label `OpenAI Node SDK`, sourceHomeUrl `https://github.com/openai/openai-node/releases`
    - Each entry: `chipLabel` = `"<tag> · <Month D>"` (e.g. `"v6.38.0 · May 15"`).
      `chipKind` is `break` for any deprecation or removal; `new` for
      additions; `feat` otherwise. Paragraph = 1–3 short sentences, plain English, may use
