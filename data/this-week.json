@@ -1,0 +1,209 @@
+{
+  "weekOf": "2026-05-18",
+  "totalNewItems": 13,
+  "sections": [
+    {
+      "id": "claude-code",
+      "label": "claude-code",
+      "emoji": "⚡",
+      "sourceHomeUrl": "https://code.claude.com/docs/en/changelog",
+      "entries": [
+        {
+          "id": "2.1.139",
+          "chipLabel": "v2.1.139 · May 11",
+          "chipKind": "feat",
+          "title": "<code>claude agents</code> dashboard + <code>/goal</code> command",
+          "paragraph": "New <code>claude agents</code> opens a dashboard listing every active session in one place. New <code>/goal</code> sets a completion condition and displays elapsed time, turn count, and token spend live during the run.",
+          "whyItMatters": "Visibility across parallel work without tab-hopping, plus a hard stop so runaway agents stop burning tokens.",
+          "sourceUrl": "https://code.claude.com/docs/en/changelog",
+          "example": { "lang": "claude session", "code": "/goal Review changed files and stop after one PR comment per finding" }
+        },
+        {
+          "id": "2.1.142",
+          "chipLabel": "v2.1.142 · May 14",
+          "chipKind": "new",
+          "title": "Opus 4.7 is now the Fast-mode default",
+          "paragraph": "Hitting <code>/fast</code> now uses Opus 4.7 instead of 4.6. Same latency profile, smarter model. Override with <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1</code> if you need the old one.",
+          "whyItMatters": "Free quality bump on every Fast-mode invocation. No code change.",
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        },
+        {
+          "id": "2.1.143",
+          "chipLabel": "v2.1.143 · May 15",
+          "chipKind": "feat",
+          "title": "Plugin dependency enforcement",
+          "paragraph": "You can no longer disable a plugin that other plugins depend on. The dependency graph is read and the toggle is blocked with a clear error. The marketplace UI also now shows projected context cost per plugin before install.",
+          "whyItMatters": "Stops the silent broken-plugin cascade and surfaces context cost before you pay it.",
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        },
+        {
+          "id": "2.1.141",
+          "chipLabel": "v2.1.141 · May 13",
+          "chipKind": "feat",
+          "title": "Hooks can emit desktop-notification terminal sequences",
+          "paragraph": "Hooks now support a <code>terminalSequence</code> output for desktop notifications without taking control of the terminal. Also: <code>CLAUDE_CODE_PLUGIN_PREFER_HTTPS</code> for environments without SSH.",
+          "whyItMatters": "Background sessions can ping you when something needs attention instead of silently waiting.",
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        }
+      ]
+    },
+    {
+      "id": "claude-agent-sdk",
+      "label": "Claude Agent SDK",
+      "emoji": "🤖",
+      "sourceHomeUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases",
+      "entries": [
+        {
+          "id": "v0.3.142",
+          "chipLabel": "v0.3.142 · May 14",
+          "chipKind": "break",
+          "title": "Breaking: v2 session API removed",
+          "paragraph": "The unstable v2 session helpers (<code>unstable_v2_createSession</code> and friends) are gone. Use <code>query()</code> instead. Also: MCP servers now connect in the background — sessions start immediately with <code>status: \"pending\"</code> while slow servers warm up.",
+          "whyItMatters": "If any code imports <code>unstable_v2_*</code> the build breaks today. <code>query()</code> covers the same surface and the docs are now stable.",
+          "example": { "lang": "ts", "code": "// before\nconst s = await unstable_v2_createSession({ model });\n\n// after\nimport { query } from \"@anthropic-ai/claude-agent-sdk\";\nconst r = await query({ model, prompt });" },
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.142"
+        },
+        {
+          "id": "v0.3.143",
+          "chipLabel": "v0.3.143 · May 15",
+          "chipKind": "feat",
+          "title": "<code>@anthropic-ai/sdk</code> moved to peerDependencies",
+          "paragraph": "<code>@anthropic-ai/sdk</code> and <code>@modelcontextprotocol/sdk</code> are now peer deps instead of direct deps. Auto-installed by npm / bun / pnpm so runtime is unchanged.",
+          "whyItMatters": "Smaller bundles, no duplicate copies in node_modules, fewer version conflicts. Old lockfiles may emit a peer warning — rerun install to fix.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.143"
+        }
+      ]
+    },
+    {
+      "id": "codex",
+      "label": "Codex",
+      "emoji": "🟢",
+      "sourceHomeUrl": "https://developers.openai.com/codex/changelog?type=codex-app",
+      "entries": [
+        {
+          "id": "2026-05-14-work-with-codex-from-anywhere",
+          "chipLabel": "May 14",
+          "chipKind": "feat",
+          "title": "Work with Codex from anywhere",
+          "paragraph": "Connect a Mac running Codex to the ChatGPT mobile app. From your phone you can see project files, change configuration, and trigger runs on the desktop.",
+          "whyItMatters": "Replaces the ssh-home-to-check-the-long-run workflow. No tunneling, no VPN, no port-forward.",
+          "sourceUrl": "https://developers.openai.com/codex/remote-connections"
+        },
+        {
+          "id": "2026-05-07-codex-for-chrome",
+          "chipLabel": "May 7",
+          "chipKind": "feat",
+          "title": "Codex for Chrome — extension launches",
+          "paragraph": "Browser extension that runs Codex across multiple tabs in parallel without taking control of your mouse. Per-site allow-list controls which tabs it can touch.",
+          "whyItMatters": "Useful for batch web tasks (filling many admin forms, scraping multiple dashboards) that run while you keep working in other tabs.",
+          "sourceUrl": "https://developers.openai.com/codex/app/chrome-extension"
+        },
+        {
+          "id": "2026-05-08-codex-cli-0-130-0",
+          "chipLabel": "May 8",
+          "chipKind": "new",
+          "title": "Codex CLI 0.130.0 — visible plugin hooks + Bedrock auth",
+          "paragraph": "Plugin details now show every hook the plugin bundles before you install. Bedrock auth uses your AWS console-login credentials directly. App-server gained pagination for large thread histories.",
+          "whyItMatters": "Audit plugins before installing them instead of trusting blindly. AWS users get a much shorter setup path.",
+          "sourceUrl": "https://github.com/openai/codex/pull/21637"
+        },
+        {
+          "id": "2026-05-07-codex-cli-0-129-0",
+          "chipLabel": "May 7",
+          "chipKind": "new",
+          "title": "Codex CLI 0.129.0 — Vim modal editing in TUI",
+          "paragraph": "The TUI composer supports modal Vim editing. The resume/fork picker got redesigned. Plugin management can share state across workspaces.",
+          "whyItMatters": "If you live in vim, the Codex TUI no longer fights your muscle memory.",
+          "sourceUrl": "https://github.com/openai/codex/pull/20065"
+        }
+      ]
+    },
+    {
+      "id": "openai-sdk",
+      "label": "OpenAI SDK",
+      "emoji": "🧬",
+      "sourceHomeUrl": "https://developers.openai.com/api/docs/changelog",
+      "entries": [
+        {
+          "id": "2026-05-12-deprecated-dall-e-and-realtime-beta",
+          "chipLabel": "May 12",
+          "chipKind": "break",
+          "title": "Breaking: DALL·E 2 / DALL·E 3 removed",
+          "paragraph": "The <code>dall-e-2</code> and <code>dall-e-3</code> models are no longer served. Migrate to <code>gpt-image-2</code>, <code>gpt-image-1</code>, or <code>gpt-image-1-mini</code>. The Realtime API Beta is also deprecated with a migration guide.",
+          "whyItMatters": "Any code that still passes <code>model: \"dall-e-3\"</code> to <code>images.generate</code> returns 404 today. One-line model id change, but you have to ship it.",
+          "example": { "lang": "ts", "code": "// before — now 404\nopenai.images.generate({ model: \"dall-e-3\", prompt });\n\n// after\nopenai.images.generate({ model: \"gpt-image-2\", prompt });" },
+          "sourceUrl": "https://developers.openai.com/api/docs/deprecations"
+        },
+        {
+          "id": "2026-05-07-realtime-2-translate-whisper",
+          "chipLabel": "May 7",
+          "chipKind": "new",
+          "title": "Realtime 2 — voice, Translate, Whisper",
+          "paragraph": "New realtime voice model with configurable reasoning depth. Plus dedicated APIs for streaming speech-to-speech translation and streaming Whisper transcription.",
+          "whyItMatters": "If you build voice features, this is the new default. Separate Translate and Whisper endpoints let you keep pipelines simple — no more rolling your own.",
+          "sourceUrl": "https://developers.openai.com/api/docs/guides/realtime"
+        },
+        {
+          "id": "2026-05-06-agents-sdk-typescript",
+          "chipLabel": "May 6",
+          "chipKind": "feat",
+          "title": "OpenAI Agents SDK now in TypeScript",
+          "paragraph": "The Agents SDK ships a TypeScript version with sandboxed agent execution and an open-source harness built in.",
+          "whyItMatters": "Real shortcut for Node services that have been wiring tool-calls by hand. Sandboxed exec means an agent can run code without owning your machine.",
+          "sourceUrl": "https://developers.openai.com/api/docs/guides/agents"
+        }
+      ]
+    }
+  ],
+  "suggestions": [
+    {
+      "num": 1,
+      "title": "Audit every <code>dall-e-*</code> call site before it 404s",
+      "chipLabel": "Breaking risk",
+      "chipKind": "break",
+      "paragraph": "OpenAI removed the DALL·E 2 and DALL·E 3 models on May 12. Any service still calling <code>images.generate({ model: \"dall-e-2\" })</code> or <code>\"dall-e-3\"</code> returns 404 right now.",
+      "whyItMatters": "One-line fix per call site, but you have to find them all. The model usually fails silently — paths exercised rarely won't surface the break until a real user hits them.",
+      "example": { "lang": "bash", "code": "# find every call site in your codebase\nrg 'model:\\s*[\"'\\''\"](dall-e-[23])[\"'\\''\"]' --type ts\n\n# then change model to gpt-image-2 (drop-in replacement)" },
+      "tiesTo": "OpenAI SDK · May 12 — DALL·E deprecation"
+    },
+    {
+      "num": 2,
+      "title": "Grep for <code>unstable_v2_</code> before the next Agent SDK bump",
+      "chipLabel": "Breaking risk",
+      "chipKind": "break",
+      "paragraph": "Claude Agent SDK v0.3.142 removed the v2 session API. If any tool, worker, or test imports <code>unstable_v2_createSession</code> (or its siblings), the next dependency bump kills the build.",
+      "whyItMatters": "Dependabot tends to propose Agent SDK bumps quietly. Catching this now avoids a red-CI fire-drill later.",
+      "example": { "lang": "bash", "code": "rg 'unstable_v2_' --type ts\n# migrate hits to:\n#   import { query } from \"@anthropic-ai/claude-agent-sdk\"\n#   const r = await query({ model, prompt, cwd })" },
+      "tiesTo": "Claude Agent SDK · v0.3.142 — v2 session API removed"
+    },
+    {
+      "num": 3,
+      "title": "Wrap long unattended Claude sessions with <code>/goal</code>",
+      "chipLabel": "DX win",
+      "chipKind": "feat",
+      "paragraph": "Any nightly automation, batch PR review, or CI-triggered Claude pass benefits from a hard done-condition. <code>/goal</code> sets one and shows a live overlay of elapsed time, turns, and token spend.",
+      "whyItMatters": "Catch runaway loops in seconds instead of finding them in next month's invoice.",
+      "example": { "lang": "claude session", "code": "/goal Stop after producing a single PR comment per finding" },
+      "tiesTo": "claude-code · v2.1.139 — /goal command"
+    },
+    {
+      "num": 4,
+      "title": "Drop the Opus 4.6 Fast-mode override env var",
+      "chipLabel": "Free upgrade",
+      "chipKind": "tip",
+      "paragraph": "Claude Code v2.1.142 made Opus 4.7 the Fast-mode default. Anyone on the team still pinning Opus 4.6 via <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1</code> should drop the pin — there's no quality reason to keep it.",
+      "whyItMatters": "Zero code change. Smarter model on every <code>/fast</code> call.",
+      "example": { "lang": "shell", "code": "# audit dotfiles + CI env\nrg 'CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE'\n# remove the export and reload" },
+      "tiesTo": "claude-code · v2.1.142 — Opus 4.7 Fast-mode default"
+    },
+    {
+      "num": 5,
+      "title": "Try Codex for Chrome on batch admin tasks",
+      "chipLabel": "Try this",
+      "chipKind": "tip",
+      "paragraph": "Codex for Chrome runs across multiple tabs in parallel without grabbing your mouse. Permissions are scoped per site, so you can let it touch one admin panel without giving it the whole browser.",
+      "whyItMatters": "Replaces hand-grinding through repetitive web tasks (form fills, status checks, dashboard exports). Time saver for ops work.",
+      "tiesTo": "Codex · May 7 — Codex for Chrome"
+    }
+  ]
+}

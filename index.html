@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Tools Weekly · 2026-05-18</title>
+<style>
+  :root {
+    --bg: #f6fbf8;
+    --bg-deep: #ecf7f1;
+    --surface: #ffffff;
+    --text: #0f172a;
+    --text-soft: #64748b;
+    --border: #cbd5e1;
+
+    --sysaid-green: #1ebe78;
+    --sysaid-green-deep: #15a067;
+    --sysaid-ink: #0f172a;
+
+    --tab-claude-code: #a7f3d0;
+    --tab-claude-sdk:  #bae6fd;
+    --tab-codex:       #86efac;
+    --tab-openai:      #99f6e4;
+    --tab-sysaid:      #1ebe78;
+
+    --card-claude-code: #ecfdf5;
+    --card-claude-sdk:  #f0f9ff;
+    --card-codex:       #f0fdf4;
+    --card-openai:      #f0fdfa;
+    --card-sysaid:      #ecfdf5;
+
+    --shadow-fat: 4px 4px 0 #0f172a;
+    --shadow-pop: 2px 2px 0 #0f172a;
+  }
+  html[data-theme="dark"] {
+    --bg: #0a1f17;
+    --bg-deep: #0f2a1f;
+    --surface: #122b22;
+    --text: #ecfdf5;
+    --text-soft: #86efac;
+    --border: #1ebe78;
+
+    --sysaid-green: #34d399;
+    --sysaid-green-deep: #10b981;
+    --sysaid-ink: #ecfdf5;
+
+    --tab-claude-code: #10b981;
+    --tab-claude-sdk:  #0ea5e9;
+    --tab-codex:       #22c55e;
+    --tab-openai:      #14b8a6;
+    --tab-sysaid:      #1ebe78;
+
+    --card-claude-code: #064e3b;
+    --card-claude-sdk:  #0c4a6e;
+    --card-codex:       #14532d;
+    --card-openai:      #134e4a;
+    --card-sysaid:      #064e3b;
+
+    --shadow-fat: 4px 4px 0 #1ebe78;
+    --shadow-pop: 2px 2px 0 #1ebe78;
+  }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
+      --bg: #0a1f17;
+      --bg-deep: #0f2a1f;
+      --surface: #122b22;
+      --text: #ecfdf5;
+      --text-soft: #86efac;
+      --border: #1ebe78;
+      --sysaid-green: #34d399;
+      --sysaid-green-deep: #10b981;
+      --sysaid-ink: #ecfdf5;
+      --tab-claude-code: #10b981;
+      --tab-claude-sdk:  #0ea5e9;
+      --tab-codex:       #22c55e;
+      --tab-openai:      #14b8a6;
+      --tab-sysaid:      #1ebe78;
+      --card-claude-code: #064e3b;
+      --card-claude-sdk:  #0c4a6e;
+      --card-codex:       #14532d;
+      --card-openai:      #134e4a;
+      --card-sysaid:      #064e3b;
+      --shadow-fat: 4px 4px 0 #1ebe78;
+      --shadow-pop: 2px 2px 0 #1ebe78;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 8%, rgba(30, 190, 120, 0.12), transparent 45%),
+      radial-gradient(circle at 90% 92%, rgba(20, 184, 166, 0.10), transparent 45%);
+    color: var(--text);
+    font-family: ui-rounded, "SF Pro Rounded", "Quicksand", -apple-system, Avenir, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  header.page {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .title-block {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 18px;
+    padding: 14px 20px;
+    box-shadow: var(--shadow-fat);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .brand-logo {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--sysaid-ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+  }
+  .brand-accent { color: var(--sysaid-green); }
+  .brand-divider {
+    width: 1.5px;
+    height: 22px;
+    background: var(--text-soft);
+    opacity: 0.4;
+  }
+  .brand-product {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .title-block p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .theme-toggle {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-pop);
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+  }
+  .theme-toggle:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--text); }
+  .theme-toggle:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--text); }
+
+  nav.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+    padding: 6px 2px 12px;
+  }
+  nav.tabs button {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    color: var(--text);
+    padding: 9px 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: var(--shadow-pop);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  nav.tabs button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--text); }
+  nav.tabs button.active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--text); }
+  nav.tabs button[data-tab="claude-code"].active { background: var(--tab-claude-code); }
+  nav.tabs button[data-tab="claude-sdk"].active  { background: var(--tab-claude-sdk);  }
+  nav.tabs button[data-tab="codex"].active       { background: var(--tab-codex);       }
+  nav.tabs button[data-tab="openai-sdk"].active  { background: var(--tab-openai);      }
+  nav.tabs button[data-tab="sysaid"].active      { background: var(--tab-sysaid);      }
+  nav.tabs .emoji { font-size: 15px; }
+  nav.tabs .count {
+    background: var(--text);
+    color: var(--surface);
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 10.5px;
+    font-weight: 900;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  section.tab-panel { display: none; }
+  section.tab-panel.active { display: block; animation: pop 0.35s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .section-head {
+    margin-bottom: 22px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .section-head .section-emoji {
+    font-size: 32px;
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 14px;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-pop);
+  }
+  .section-head h2 {
+    margin: 0 0 2px;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+  }
+  .section-head .sub {
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .section-head .sub a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+  .cards { display: grid; gap: 16px; }
+
+  .card {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 16px;
+    padding: 18px 20px 18px 24px;
+    box-shadow: var(--shadow-fat);
+    transition: transform 0.12s, box-shadow 0.12s;
+    position: relative;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--text);
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+  }
+  #tab-claude-code .card::before { background: var(--tab-claude-code); }
+  #tab-claude-sdk  .card::before { background: var(--tab-claude-sdk);  }
+  #tab-codex       .card::before { background: var(--tab-codex);       }
+  #tab-openai-sdk  .card::before { background: var(--tab-openai);      }
+  #tab-sysaid      .card::before { background: var(--tab-sysaid);      }
+  .card:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--text);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .card-emoji { display: none; }
+  .card-head h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    flex: 1;
+    min-width: 180px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .chip {
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1.5px solid var(--text);
+    background: #fff;
+    color: var(--text);
+  }
+  .chip-new   { background: #bbf7d0; }
+  .chip-feat  { background: #bfdbfe; }
+  .chip-break { background: #fecaca; }
+  .chip-tip   { background: #fde68a; }
+  .chip-cost  { background: #fbcfe8; }
+  .chip-safe  { background: #fed7aa; }
+  html[data-theme="dark"] .chip { color: #fef3c7; background: #1c1917; }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .chip { color: #fef3c7; background: #1c1917; }
+  }
+
+  .card p {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .card .why {
+    background: var(--bg-deep);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--text);
+    margin: 12px 0;
+    font-weight: 500;
+    line-height: 1.55;
+  }
+  .card .why::before {
+    content: "Why it matters · ";
+    font-weight: 800;
+    color: var(--sysaid-green-deep);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  html[data-theme="dark"] .card .why::before { color: var(--sysaid-green); }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .card .why::before { color: var(--sysaid-green); }
+  }
+
+  .card a.source {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 1.5px solid var(--text);
+    padding-bottom: 1px;
+  }
+  .card a.source:hover { opacity: 0.7; }
+
+  .card code {
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    background: var(--bg-deep);
+    padding: 1px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .code-block {
+    margin: 22px 0 12px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border: 2px solid var(--text);
+    border-radius: 10px;
+    padding: 18px 14px 12px;
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    position: relative;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow: visible;
+  }
+  .code-block::before {
+    content: "Example";
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: var(--sysaid-green);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 9px;
+    border-radius: 6px;
+    border: 1.5px solid var(--text);
+  }
+  .code-block .lang {
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    background: var(--bg-deep);
+    color: var(--text-soft);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1.5px solid var(--text);
+  }
+  .code-block .tok-key { color: #86efac; }
+  .code-block .tok-str { color: #fde68a; }
+  .code-block .tok-com { color: #94a3b8; font-style: italic; }
+  .code-block .tok-fn  { color: #93c5fd; }
+  .code-block .tok-num { color: #fca5a5; }
+  html[data-theme="dark"] .code-block { background: #020617; border-color: var(--sysaid-green); }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .code-block { background: #020617; border-color: var(--sysaid-green); }
+  }
+
+  .suggest-card {
+    position: relative;
+    padding-left: 72px;
+  }
+  .suggest-card .num {
+    position: absolute;
+    left: 20px;
+    top: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--sysaid-green);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--text);
+    z-index: 2;
+  }
+  .ties-to {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ties-to::before { content: "↳"; font-weight: 800; color: var(--text); }
+
+  footer.page {
+    margin-top: 56px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  footer.page .pill {
+    display: inline-block;
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 999px;
+    padding: 6px 16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page">
+  <div class="title-block">
+    <div class="brand">
+      <span class="brand-logo">sys<span class="brand-accent">aid</span></span>
+      <span class="brand-divider"></span>
+      <span class="brand-product">AI Tools Weekly</span>
+    </div>
+    <p>Mon 2026-05-18 · 13 fresh items across 4 tools · 5 practical ideas</p>
+  </div>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+    <span id="themeIcon">🌗</span><span id="themeLabel">Auto</span>
+  </button>
+</header>
+
+<nav class="tabs" id="tabs"><button data-tab="claude-code" class="active"><span class="emoji">⚡</span>claude-code<span class="count">4</span></button>
+  <button data-tab="claude-agent-sdk"><span class="emoji">🤖</span>Claude Agent SDK<span class="count">2</span></button>
+  <button data-tab="codex"><span class="emoji">🟢</span>Codex<span class="count">4</span></button>
+  <button data-tab="openai-sdk"><span class="emoji">🧬</span>OpenAI SDK<span class="count">3</span></button>
+  <button data-tab="ideas"><span class="emoji">🎯</span>Practical ideas<span class="count">5</span></button></nav>
+
+
+<section class="tab-panel active" id="tab-claude-code">
+  <div class="section-head">
+    <div class="section-emoji">⚡</div>
+    <div>
+      <h2>claude-code</h2>
+      <div class="sub">Source · <a href="https://code.claude.com/docs/en/changelog">code.claude.com/docs/en/changelog</a></div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <h3><code>claude agents</code> dashboard + <code>/goal</code> command</h3>
+        <span class="chip chip-feat">v2.1.139 · May 11</span>
+      </div>
+      <p>New <code>claude agents</code> opens a dashboard listing every active session in one place. New <code>/goal</code> sets a completion condition and displays elapsed time, turn count, and token spend live during the run.</p>
+      <div class="why">Visibility across parallel work without tab-hopping, plus a hard stop so runaway agents stop burning tokens.</div>
+      <pre class="code-block"><span class="lang">claude session</span>/goal Review changed files and stop after one PR comment per finding</pre>
+      <a class="source" href="https://code.claude.com/docs/en/changelog">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Opus 4.7 is now the Fast-mode default</h3>
+        <span class="chip chip-new">v2.1.142 · May 14</span>
+      </div>
+      <p>Hitting <code>/fast</code> now uses Opus 4.7 instead of 4.6. Same latency profile, smarter model. Override with <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1</code> if you need the old one.</p>
+      <div class="why">Free quality bump on every Fast-mode invocation. No code change.</div>
+      
+      <a class="source" href="https://code.claude.com/docs/en/changelog">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Plugin dependency enforcement</h3>
+        <span class="chip chip-feat">v2.1.143 · May 15</span>
+      </div>
+      <p>You can no longer disable a plugin that other plugins depend on. The dependency graph is read and the toggle is blocked with a clear error. The marketplace UI also now shows projected context cost per plugin before install.</p>
+      <div class="why">Stops the silent broken-plugin cascade and surfaces context cost before you pay it.</div>
+      
+      <a class="source" href="https://code.claude.com/docs/en/changelog">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Hooks can emit desktop-notification terminal sequences</h3>
+        <span class="chip chip-feat">v2.1.141 · May 13</span>
+      </div>
+      <p>Hooks now support a <code>terminalSequence</code> output for desktop notifications without taking control of the terminal. Also: <code>CLAUDE_CODE_PLUGIN_PREFER_HTTPS</code> for environments without SSH.</p>
+      <div class="why">Background sessions can ping you when something needs attention instead of silently waiting.</div>
+      
+      <a class="source" href="https://code.claude.com/docs/en/changelog">Read entry →</a>
+    </div></div>
+</section>
+<section class="tab-panel" id="tab-claude-agent-sdk">
+  <div class="section-head">
+    <div class="section-emoji">🤖</div>
+    <div>
+      <h2>Claude Agent SDK</h2>
+      <div class="sub">Source · <a href="https://github.com/anthropics/claude-agent-sdk-typescript/releases">github.com/anthropics/claude-agent-sdk-typescript/releases</a></div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <h3>Breaking: v2 session API removed</h3>
+        <span class="chip chip-break">v0.3.142 · May 14</span>
+      </div>
+      <p>The unstable v2 session helpers (<code>unstable_v2_createSession</code> and friends) are gone. Use <code>query()</code> instead. Also: MCP servers now connect in the background — sessions start immediately with <code>status: &quot;pending&quot;</code> while slow servers warm up.</p>
+      <div class="why">If any code imports <code>unstable_v2_*</code> the build breaks today. <code>query()</code> covers the same surface and the docs are now stable.</div>
+      <pre class="code-block"><span class="lang">ts</span>// before
+const s = await unstable_v2_createSession({ model });
+
+// after
+import { query } from &quot;@anthropic-ai/claude-agent-sdk&quot;;
+const r = await query({ model, prompt });</pre>
+      <a class="source" href="https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.142">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3><code>@anthropic-ai/sdk</code> moved to peerDependencies</h3>
+        <span class="chip chip-feat">v0.3.143 · May 15</span>
+      </div>
+      <p><code>@anthropic-ai/sdk</code> and <code>@modelcontextprotocol/sdk</code> are now peer deps instead of direct deps. Auto-installed by npm / bun / pnpm so runtime is unchanged.</p>
+      <div class="why">Smaller bundles, no duplicate copies in node_modules, fewer version conflicts. Old lockfiles may emit a peer warning — rerun install to fix.</div>
+      
+      <a class="source" href="https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.143">Read entry →</a>
+    </div></div>
+</section>
+<section class="tab-panel" id="tab-codex">
+  <div class="section-head">
+    <div class="section-emoji">🟢</div>
+    <div>
+      <h2>Codex</h2>
+      <div class="sub">Source · <a href="https://developers.openai.com/codex/changelog?type=codex-app">developers.openai.com/codex/changelog</a></div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <h3>Work with Codex from anywhere</h3>
+        <span class="chip chip-feat">May 14</span>
+      </div>
+      <p>Connect a Mac running Codex to the ChatGPT mobile app. From your phone you can see project files, change configuration, and trigger runs on the desktop.</p>
+      <div class="why">Replaces the ssh-home-to-check-the-long-run workflow. No tunneling, no VPN, no port-forward.</div>
+      
+      <a class="source" href="https://developers.openai.com/codex/remote-connections">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Codex for Chrome — extension launches</h3>
+        <span class="chip chip-feat">May 7</span>
+      </div>
+      <p>Browser extension that runs Codex across multiple tabs in parallel without taking control of your mouse. Per-site allow-list controls which tabs it can touch.</p>
+      <div class="why">Useful for batch web tasks (filling many admin forms, scraping multiple dashboards) that run while you keep working in other tabs.</div>
+      
+      <a class="source" href="https://developers.openai.com/codex/app/chrome-extension">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Codex CLI 0.130.0 — visible plugin hooks + Bedrock auth</h3>
+        <span class="chip chip-new">May 8</span>
+      </div>
+      <p>Plugin details now show every hook the plugin bundles before you install. Bedrock auth uses your AWS console-login credentials directly. App-server gained pagination for large thread histories.</p>
+      <div class="why">Audit plugins before installing them instead of trusting blindly. AWS users get a much shorter setup path.</div>
+      
+      <a class="source" href="https://github.com/openai/codex/pull/21637">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Codex CLI 0.129.0 — Vim modal editing in TUI</h3>
+        <span class="chip chip-new">May 7</span>
+      </div>
+      <p>The TUI composer supports modal Vim editing. The resume/fork picker got redesigned. Plugin management can share state across workspaces.</p>
+      <div class="why">If you live in vim, the Codex TUI no longer fights your muscle memory.</div>
+      
+      <a class="source" href="https://github.com/openai/codex/pull/20065">Read entry →</a>
+    </div></div>
+</section>
+<section class="tab-panel" id="tab-openai-sdk">
+  <div class="section-head">
+    <div class="section-emoji">🧬</div>
+    <div>
+      <h2>OpenAI SDK</h2>
+      <div class="sub">Source · <a href="https://developers.openai.com/api/docs/changelog">developers.openai.com/api/docs/changelog</a></div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <h3>Breaking: DALL·E 2 / DALL·E 3 removed</h3>
+        <span class="chip chip-break">May 12</span>
+      </div>
+      <p>The <code>dall-e-2</code> and <code>dall-e-3</code> models are no longer served. Migrate to <code>gpt-image-2</code>, <code>gpt-image-1</code>, or <code>gpt-image-1-mini</code>. The Realtime API Beta is also deprecated with a migration guide.</p>
+      <div class="why">Any code that still passes <code>model: &quot;dall-e-3&quot;</code> to <code>images.generate</code> returns 404 today. One-line model id change, but you have to ship it.</div>
+      <pre class="code-block"><span class="lang">ts</span>// before — now 404
+openai.images.generate({ model: &quot;dall-e-3&quot;, prompt });
+
+// after
+openai.images.generate({ model: &quot;gpt-image-2&quot;, prompt });</pre>
+      <a class="source" href="https://developers.openai.com/api/docs/deprecations">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Realtime 2 — voice, Translate, Whisper</h3>
+        <span class="chip chip-new">May 7</span>
+      </div>
+      <p>New realtime voice model with configurable reasoning depth. Plus dedicated APIs for streaming speech-to-speech translation and streaming Whisper transcription.</p>
+      <div class="why">If you build voice features, this is the new default. Separate Translate and Whisper endpoints let you keep pipelines simple — no more rolling your own.</div>
+      
+      <a class="source" href="https://developers.openai.com/api/docs/guides/realtime">Read entry →</a>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h3>OpenAI Agents SDK now in TypeScript</h3>
+        <span class="chip chip-feat">May 6</span>
+      </div>
+      <p>The Agents SDK ships a TypeScript version with sandboxed agent execution and an open-source harness built in.</p>
+      <div class="why">Real shortcut for Node services that have been wiring tool-calls by hand. Sandboxed exec means an agent can run code without owning your machine.</div>
+      
+      <a class="source" href="https://developers.openai.com/api/docs/guides/agents">Read entry →</a>
+    </div></div>
+</section>
+<section class="tab-panel" id="tab-ideas">
+  <div class="section-head">
+    <div class="section-emoji">🎯</div>
+    <div>
+      <h2>Practical ideas — 5 ideas this week</h2>
+      <div class="sub">Concrete ways to use this week's changes in your Node / TypeScript service · each tied to a changelog item above</div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card suggest-card">
+      <span class="num">1</span>
+      <div class="card-head">
+        <h3>Audit every <code>dall-e-*</code> call site before it 404s</h3>
+        <span class="chip chip-break">Breaking risk</span>
+      </div>
+      <p>OpenAI removed the DALL·E 2 and DALL·E 3 models on May 12. Any service still calling <code>images.generate({ model: &quot;dall-e-2&quot; })</code> or <code>&quot;dall-e-3&quot;</code> returns 404 right now.</p>
+      <div class="why">One-line fix per call site, but you have to find them all. The model usually fails silently — paths exercised rarely won&#39;t surface the break until a real user hits them.</div>
+      <pre class="code-block"><span class="lang">bash</span># find every call site in your codebase
+rg &#39;model:\s*[&quot;&#39;\&#39;&#39;&quot;](dall-e-[23])[&quot;&#39;\&#39;&#39;&quot;]&#39; --type ts
+
+# then change model to gpt-image-2 (drop-in replacement)</pre>
+      <span class="ties-to">OpenAI SDK · May 12 — DALL·E deprecation</span>
+    </div>
+    <div class="card suggest-card">
+      <span class="num">2</span>
+      <div class="card-head">
+        <h3>Grep for <code>unstable_v2_</code> before the next Agent SDK bump</h3>
+        <span class="chip chip-break">Breaking risk</span>
+      </div>
+      <p>Claude Agent SDK v0.3.142 removed the v2 session API. If any tool, worker, or test imports <code>unstable_v2_createSession</code> (or its siblings), the next dependency bump kills the build.</p>
+      <div class="why">Dependabot tends to propose Agent SDK bumps quietly. Catching this now avoids a red-CI fire-drill later.</div>
+      <pre class="code-block"><span class="lang">bash</span>rg &#39;unstable_v2_&#39; --type ts
+# migrate hits to:
+#   import { query } from &quot;@anthropic-ai/claude-agent-sdk&quot;
+#   const r = await query({ model, prompt, cwd })</pre>
+      <span class="ties-to">Claude Agent SDK · v0.3.142 — v2 session API removed</span>
+    </div>
+    <div class="card suggest-card">
+      <span class="num">3</span>
+      <div class="card-head">
+        <h3>Wrap long unattended Claude sessions with <code>/goal</code></h3>
+        <span class="chip chip-feat">DX win</span>
+      </div>
+      <p>Any nightly automation, batch PR review, or CI-triggered Claude pass benefits from a hard done-condition. <code>/goal</code> sets one and shows a live overlay of elapsed time, turns, and token spend.</p>
+      <div class="why">Catch runaway loops in seconds instead of finding them in next month&#39;s invoice.</div>
+      <pre class="code-block"><span class="lang">claude session</span>/goal Stop after producing a single PR comment per finding</pre>
+      <span class="ties-to">claude-code · v2.1.139 — /goal command</span>
+    </div>
+    <div class="card suggest-card">
+      <span class="num">4</span>
+      <div class="card-head">
+        <h3>Drop the Opus 4.6 Fast-mode override env var</h3>
+        <span class="chip chip-tip">Free upgrade</span>
+      </div>
+      <p>Claude Code v2.1.142 made Opus 4.7 the Fast-mode default. Anyone on the team still pinning Opus 4.6 via <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1</code> should drop the pin — there&#39;s no quality reason to keep it.</p>
+      <div class="why">Zero code change. Smarter model on every <code>/fast</code> call.</div>
+      <pre class="code-block"><span class="lang">shell</span># audit dotfiles + CI env
+rg &#39;CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE&#39;
+# remove the export and reload</pre>
+      <span class="ties-to">claude-code · v2.1.142 — Opus 4.7 Fast-mode default</span>
+    </div>
+    <div class="card suggest-card">
+      <span class="num">5</span>
+      <div class="card-head">
+        <h3>Try Codex for Chrome on batch admin tasks</h3>
+        <span class="chip chip-tip">Try this</span>
+      </div>
+      <p>Codex for Chrome runs across multiple tabs in parallel without grabbing your mouse. Permissions are scoped per site, so you can let it touch one admin panel without giving it the whole browser.</p>
+      <div class="why">Replaces hand-grinding through repetitive web tasks (form fills, status checks, dashboard exports). Time saver for ops work.</div>
+      
+      <span class="ties-to">Codex · May 7 — Codex for Chrome</span>
+    </div></div>
+</section>
+
+<footer class="page">
+  <span class="pill">📅 Next run · Mon 2026-05-25 08:00 IDT</span>
+</footer>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('nav.tabs button');
+  const panels = document.querySelectorAll('section.tab-panel');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.tab;
+      tabs.forEach(b => b.classList.toggle('active', b === btn));
+      panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + id));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  const themes = ['auto', 'light', 'dark'];
+  const labels = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+  const icons  = { auto: '🌗', light: '☀️', dark: '🌙' };
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  function setTheme(t) {
+    html.dataset.theme = t;
+    icon.textContent = icons[t];
+    label.textContent = labels[t];
+    localStorage.setItem('theme', t);
+  }
+  const saved = localStorage.getItem('theme');
+  if (saved && themes.includes(saved)) setTheme(saved);
+  btn.addEventListener('click', () => {
+    const cur = html.dataset.theme;
+    const next = themes[(themes.indexOf(cur) + 1) % themes.length];
+    setTheme(next);
+  });
+</script>
+
+</body>
+</html>

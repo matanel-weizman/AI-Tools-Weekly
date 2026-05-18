@@ -1,10 +1,31 @@
 {
-  "last_run": null,
-  "last_run_status": "never",
+  "last_run": "2026-05-18T13:30:00Z",
+  "last_run_status": "ok",
   "seen": {
-    "claude-code":      { "max": null, "ids": [] },
-    "claude-agent-sdk": { "max": null, "ids": [] },
-    "codex":            { "max": null, "ids": [] },
-    "openai-sdk":       { "max": null, "ids": [] }
+    "claude-code": {
+      "max": "2.1.143",
+      "ids": ["2.1.139", "2.1.141", "2.1.142", "2.1.143"]
+    },
+    "claude-agent-sdk": {
+      "max": "v0.3.143",
+      "ids": ["v0.3.142", "v0.3.143"]
+    },
+    "codex": {
+      "max": "2026-05-14-work-with-codex-from-anywhere",
+      "ids": [
+        "2026-05-07-codex-cli-0-129-0",
+        "2026-05-07-codex-for-chrome",
+        "2026-05-08-codex-cli-0-130-0",
+        "2026-05-14-work-with-codex-from-anywhere"
+      ]
+    },
+    "openai-sdk": {
+      "max": "2026-05-12-deprecated-dall-e-and-realtime-beta",
+      "ids": [
+        "2026-05-06-agents-sdk-typescript",
+        "2026-05-07-realtime-2-translate-whisper",
+        "2026-05-12-deprecated-dall-e-and-realtime-beta"
+      ]
+    }
   }
 }
