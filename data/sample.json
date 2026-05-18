@@ -1,0 +1,44 @@
+{
+  "weekOf": "2026-05-18",
+  "totalNewItems": 2,
+  "sections": [
+    {
+      "id": "claude-code",
+      "label": "claude-code",
+      "emoji": "⚡",
+      "sourceHomeUrl": "https://code.claude.com/docs/en/changelog",
+      "entries": [
+        {
+          "id": "2.1.143",
+          "chipLabel": "v2.1.143 · May 15",
+          "chipKind": "feat",
+          "title": "Plugin dependency enforcement",
+          "paragraph": "You can no longer disable a plugin that other plugins depend on. Claude Code reads the dependency graph and blocks the toggle with a clear error.",
+          "whyItMatters": "Stops the broken-plugin cascade.",
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        },
+        {
+          "id": "2.1.139",
+          "chipLabel": "v2.1.139 · May 11",
+          "chipKind": "feat",
+          "title": "<code>claude agents</code> dashboard + <code>/goal</code> command",
+          "paragraph": "New <code>claude agents</code> opens a dashboard showing every active session. New <code>/goal</code> sets completion conditions and shows elapsed time, turns, and tokens live.",
+          "whyItMatters": "See every parallel session in one view. <code>/goal</code> stops runaway agents.",
+          "example": { "lang": "claude session", "code": "/goal Stop after one PR comment per finding" },
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        }
+      ]
+    }
+  ],
+  "suggestions": [
+    {
+      "num": 1,
+      "title": "Wrap long-running Claude sessions with <code>/goal</code>",
+      "chipLabel": "DX win",
+      "chipKind": "feat",
+      "paragraph": "Any nightly automation or PR-review pass that runs Claude unattended benefits from a hard done-condition. <code>/goal</code> adds a token + turn overlay so cost blows up are visible immediately.",
+      "whyItMatters": "Cheaper to spot runaway loops in seconds than to debug post-mortem.",
+      "tiesTo": "claude-code · v2.1.139 — /goal command"
+    }
+  ]
+}

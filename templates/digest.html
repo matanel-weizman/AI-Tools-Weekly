@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Tools Weekly · 2026-05-18</title>
+<style>
+  :root {
+    --bg: #f6fbf8;
+    --bg-deep: #ecf7f1;
+    --surface: #ffffff;
+    --text: #0f172a;
+    --text-soft: #64748b;
+    --border: #cbd5e1;
+
+    --sysaid-green: #1ebe78;
+    --sysaid-green-deep: #15a067;
+    --sysaid-ink: #0f172a;
+
+    --tab-claude-code: #a7f3d0;
+    --tab-claude-sdk:  #bae6fd;
+    --tab-codex:       #86efac;
+    --tab-openai:      #99f6e4;
+    --tab-sysaid:      #1ebe78;
+
+    --card-claude-code: #ecfdf5;
+    --card-claude-sdk:  #f0f9ff;
+    --card-codex:       #f0fdf4;
+    --card-openai:      #f0fdfa;
+    --card-sysaid:      #ecfdf5;
+
+    --shadow-fat: 4px 4px 0 #0f172a;
+    --shadow-pop: 2px 2px 0 #0f172a;
+  }
+  html[data-theme="dark"] {
+    --bg: #0a1f17;
+    --bg-deep: #0f2a1f;
+    --surface: #122b22;
+    --text: #ecfdf5;
+    --text-soft: #86efac;
+    --border: #1ebe78;
+
+    --sysaid-green: #34d399;
+    --sysaid-green-deep: #10b981;
+    --sysaid-ink: #ecfdf5;
+
+    --tab-claude-code: #10b981;
+    --tab-claude-sdk:  #0ea5e9;
+    --tab-codex:       #22c55e;
+    --tab-openai:      #14b8a6;
+    --tab-sysaid:      #1ebe78;
+
+    --card-claude-code: #064e3b;
+    --card-claude-sdk:  #0c4a6e;
+    --card-codex:       #14532d;
+    --card-openai:      #134e4a;
+    --card-sysaid:      #064e3b;
+
+    --shadow-fat: 4px 4px 0 #1ebe78;
+    --shadow-pop: 2px 2px 0 #1ebe78;
+  }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
+      --bg: #0a1f17;
+      --bg-deep: #0f2a1f;
+      --surface: #122b22;
+      --text: #ecfdf5;
+      --text-soft: #86efac;
+      --border: #1ebe78;
+      --sysaid-green: #34d399;
+      --sysaid-green-deep: #10b981;
+      --sysaid-ink: #ecfdf5;
+      --tab-claude-code: #10b981;
+      --tab-claude-sdk:  #0ea5e9;
+      --tab-codex:       #22c55e;
+      --tab-openai:      #14b8a6;
+      --tab-sysaid:      #1ebe78;
+      --card-claude-code: #064e3b;
+      --card-claude-sdk:  #0c4a6e;
+      --card-codex:       #14532d;
+      --card-openai:      #134e4a;
+      --card-sysaid:      #064e3b;
+      --shadow-fat: 4px 4px 0 #1ebe78;
+      --shadow-pop: 2px 2px 0 #1ebe78;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 10% 8%, rgba(30, 190, 120, 0.12), transparent 45%),
+      radial-gradient(circle at 90% 92%, rgba(20, 184, 166, 0.10), transparent 45%);
+    color: var(--text);
+    font-family: ui-rounded, "SF Pro Rounded", "Quicksand", -apple-system, Avenir, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  header.page {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .title-block {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 18px;
+    padding: 14px 20px;
+    box-shadow: var(--shadow-fat);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .brand-logo {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--sysaid-ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+  }
+  .brand-accent { color: var(--sysaid-green); }
+  .brand-divider {
+    width: 1.5px;
+    height: 22px;
+    background: var(--text-soft);
+    opacity: 0.4;
+  }
+  .brand-product {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .title-block p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .theme-toggle {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-pop);
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+  }
+  .theme-toggle:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--text); }
+  .theme-toggle:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--text); }
+
+  nav.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+    padding: 6px 2px 12px;
+  }
+  nav.tabs button {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    color: var(--text);
+    padding: 9px 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: var(--shadow-pop);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: inherit;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  nav.tabs button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--text); }
+  nav.tabs button.active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--text); }
+  nav.tabs button[data-tab="claude-code"].active { background: var(--tab-claude-code); }
+  nav.tabs button[data-tab="claude-sdk"].active  { background: var(--tab-claude-sdk);  }
+  nav.tabs button[data-tab="codex"].active       { background: var(--tab-codex);       }
+  nav.tabs button[data-tab="openai-sdk"].active  { background: var(--tab-openai);      }
+  nav.tabs button[data-tab="sysaid"].active      { background: var(--tab-sysaid);      }
+  nav.tabs .emoji { font-size: 15px; }
+  nav.tabs .count {
+    background: var(--text);
+    color: var(--surface);
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 10.5px;
+    font-weight: 900;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  section.tab-panel { display: none; }
+  section.tab-panel.active { display: block; animation: pop 0.35s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .section-head {
+    margin-bottom: 22px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .section-head .section-emoji {
+    font-size: 32px;
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 14px;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-pop);
+  }
+  .section-head h2 {
+    margin: 0 0 2px;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+  }
+  .section-head .sub {
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .section-head .sub a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+  .cards { display: grid; gap: 16px; }
+
+  .card {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 16px;
+    padding: 18px 20px 18px 24px;
+    box-shadow: var(--shadow-fat);
+    transition: transform 0.12s, box-shadow 0.12s;
+    position: relative;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--text);
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+  }
+  #tab-claude-code .card::before { background: var(--tab-claude-code); }
+  #tab-claude-sdk  .card::before { background: var(--tab-claude-sdk);  }
+  #tab-codex       .card::before { background: var(--tab-codex);       }
+  #tab-openai-sdk  .card::before { background: var(--tab-openai);      }
+  #tab-sysaid      .card::before { background: var(--tab-sysaid);      }
+  .card:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--text);
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .card-emoji { display: none; }
+  .card-head h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    flex: 1;
+    min-width: 180px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .chip {
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1.5px solid var(--text);
+    background: #fff;
+    color: var(--text);
+  }
+  .chip-new   { background: #bbf7d0; }
+  .chip-feat  { background: #bfdbfe; }
+  .chip-break { background: #fecaca; }
+  .chip-tip   { background: #fde68a; }
+  .chip-cost  { background: #fbcfe8; }
+  .chip-safe  { background: #fed7aa; }
+  html[data-theme="dark"] .chip { color: #fef3c7; background: #1c1917; }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .chip { color: #fef3c7; background: #1c1917; }
+  }
+
+  .card p {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .card .why {
+    background: var(--bg-deep);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: var(--text);
+    margin: 12px 0;
+    font-weight: 500;
+    line-height: 1.55;
+  }
+  .card .why::before {
+    content: "Why it matters · ";
+    font-weight: 800;
+    color: var(--sysaid-green-deep);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  html[data-theme="dark"] .card .why::before { color: var(--sysaid-green); }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .card .why::before { color: var(--sysaid-green); }
+  }
+
+  .card a.source {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+    border-bottom: 1.5px solid var(--text);
+    padding-bottom: 1px;
+  }
+  .card a.source:hover { opacity: 0.7; }
+
+  .card code {
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    background: var(--bg-deep);
+    padding: 1px 6px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .code-block {
+    margin: 22px 0 12px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border: 2px solid var(--text);
+    border-radius: 10px;
+    padding: 18px 14px 12px;
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+    position: relative;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow: visible;
+  }
+  .code-block::before {
+    content: "Example";
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: var(--sysaid-green);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 9px;
+    border-radius: 6px;
+    border: 1.5px solid var(--text);
+  }
+  .code-block .lang {
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    background: var(--bg-deep);
+    color: var(--text-soft);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1.5px solid var(--text);
+  }
+  .code-block .tok-key { color: #86efac; }
+  .code-block .tok-str { color: #fde68a; }
+  .code-block .tok-com { color: #94a3b8; font-style: italic; }
+  .code-block .tok-fn  { color: #93c5fd; }
+  .code-block .tok-num { color: #fca5a5; }
+  html[data-theme="dark"] .code-block { background: #020617; border-color: var(--sysaid-green); }
+  @media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] .code-block { background: #020617; border-color: var(--sysaid-green); }
+  }
+
+  .suggest-card {
+    position: relative;
+    padding-left: 72px;
+  }
+  .suggest-card .num {
+    position: absolute;
+    left: 20px;
+    top: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--sysaid-green);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--text);
+    z-index: 2;
+  }
+  .ties-to {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ties-to::before { content: "↳"; font-weight: 800; color: var(--text); }
+
+  footer.page {
+    margin-top: 56px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  footer.page .pill {
+    display: inline-block;
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 999px;
+    padding: 6px 16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page">
+  <div class="title-block">
+    <div class="brand">
+      <span class="brand-logo">sys<span class="brand-accent">aid</span></span>
+      <span class="brand-divider"></span>
+      <span class="brand-product">AI Tools Weekly</span>
+    </div>
+    <p>__SUBTITLE__</p>
+  </div>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+    <span id="themeIcon">🌗</span><span id="themeLabel">Auto</span>
+  </button>
+</header>
+
+<nav class="tabs" id="tabs"><!-- __TABS__ --></nav>
+
+<!-- __SECTIONS__ -->
+
+<footer class="page">
+  <span class="pill">📅 __NEXT_RUN__</span>
+</footer>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('nav.tabs button');
+  const panels = document.querySelectorAll('section.tab-panel');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.tab;
+      tabs.forEach(b => b.classList.toggle('active', b === btn));
+      panels.forEach(p => p.classList.toggle('active', p.id === 'tab-' + id));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  const themes = ['auto', 'light', 'dark'];
+  const labels = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+  const icons  = { auto: '🌗', light: '☀️', dark: '🌙' };
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  function setTheme(t) {
+    html.dataset.theme = t;
+    icon.textContent = icons[t];
+    label.textContent = labels[t];
+    localStorage.setItem('theme', t);
+  }
+  const saved = localStorage.getItem('theme');
+  if (saved && themes.includes(saved)) setTheme(saved);
+  btn.addEventListener('click', () => {
+    const cur = html.dataset.theme;
+    const next = themes[(themes.indexOf(cur) + 1) % themes.length];
+    setTheme(next);
+  });
+</script>
+
+</body>
+</html>
