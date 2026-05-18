@@ -12,9 +12,14 @@ below.
   | Source              | URL                                                                                | Diff key                  |
   |---------------------|------------------------------------------------------------------------------------|---------------------------|
   | `claude-code`       | https://code.claude.com/docs/en/changelog                                          | version e.g. `2.1.143`    |
-  | `claude-agent-sdk`  | https://github.com/anthropics/claude-agent-sdk-typescript/releases                 | tag e.g. `v0.3.143`       |
-  | `codex`             | https://developers.openai.com/codex/changelog?type=codex-app                       | `<YYYY-MM-DD>-<slug>`     |
-  | `openai-sdk`        | https://developers.openai.com/api/docs/changelog                                   | `<YYYY-MM-DD>-<slug>`     |
+  | `claude-agent-sdk`  | https://api.github.com/repos/anthropics/claude-agent-sdk-typescript/releases       | tag e.g. `v0.3.143`       |
+  | `codex`             | https://api.github.com/repos/openai/codex/releases                                 | tag e.g. `rust-v0.131.0`  |
+  | `openai-sdk`        | https://api.github.com/repos/openai/openai-node/releases                           | tag e.g. `v6.38.0`        |
+
+  *Note:* `developers.openai.com` blocks WebFetch from cloud-egress IPs (403),
+  so codex + openai-sdk use the GitHub Releases API instead. claude-code's
+  doc page works because Anthropic's CDN is permissive. claude-agent-sdk
+  uses the GitHub API for the same reason.
 
 ## Constraints
 
@@ -39,15 +44,21 @@ below.
 
 3. **Fetch each source via WebFetch.** Use the WebFetch tool, one call per
    source URL above. Ask for: the most recent ~6 entries with date or
-   version, title, 1-2 sentence summary, category (new / feature / breaking
-   / fix), and the upstream anchor or release URL.
+   version tag, title, 1-2 sentence summary, category (new / feature /
+   breaking / fix), and the upstream release URL (the `html_url` field on
+   each GitHub release).
 
 4. **Filter "only new" per source.** For each source, an entry is new
-   when its id (version tag for claude-code / claude-agent-sdk; ISO date
-   plus short slug for codex / openai-sdk) is NOT in `state.seen[src].ids`
-   AND (when `max` is non-null) the id is lexicographically greater than
-   `max`. On cold start (`max === null`), keep up to 6 entries; treat older
-   entries as already-known noise.
+   when its id (release tag string for the GitHub-sourced sources, version
+   string for claude-code) is NOT in `state.seen[src].ids` AND (when `max`
+   is non-null) the id is lexicographically greater than `max`. On cold
+   start (`max === null`), keep up to 6 entries; treat older entries as
+   already-known noise.
+
+   Note: the `codex` and `openai-sdk` ids changed shape on 2026-05-18 from
+   `<YYYY-MM-DD>-<slug>` (doc-page era) to GitHub release tags. The legacy
+   ids in `state.seen` are kept for safety but new release-tag ids will
+   sort lexicographically greater so the new-entry diff still works.
 
 5. **Quiet-week check.** If every source has zero new entries AND no
    WebFetch raised an error, this is a quiet week. Write a `state.json`
@@ -63,10 +74,9 @@ below.
      - `claude-agent-sdk` → emoji `🤖`, label `Claude Agent SDK`, sourceHomeUrl `https://github.com/anthropics/claude-agent-sdk-typescript/releases`
      - `codex` → emoji `🟢`, label `Codex`, sourceHomeUrl `https://developers.openai.com/codex/changelog?type=codex-app`
      - `openai-sdk` → emoji `🧬`, label `OpenAI SDK`, sourceHomeUrl `https://developers.openai.com/api/docs/changelog`
-   - Each entry: `chipLabel` = `"v<version> · <Month D>"` for claude-code /
-     claude-agent-sdk, or `"<Month D>"` for codex / openai-sdk. `chipKind`
-     is `break` for any deprecation or removal; `new` for additions; `feat`
-     otherwise. Paragraph = 1–3 short sentences, plain English, may use
+   - Each entry: `chipLabel` = `"<tag> · <Month D>"` (e.g. `"v6.38.0 · May 15"`).
+     `chipKind` is `break` for any deprecation or removal; `new` for
+     additions; `feat` otherwise. Paragraph = 1–3 short sentences, plain English, may use
      inline `<code>`. `whyItMatters` = 1 sentence; assume the reader skimmed
      nothing else. Add `example` ONLY when the user has to write code or
      config to act on the change; keep ≤10 lines.
