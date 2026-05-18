@@ -1,0 +1,6 @@
+raw/
+*.local.json
+.DS_Store
+dist/
+node_modules/
+state.next.json

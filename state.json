@@ -1,0 +1,10 @@
+{
+  "last_run": null,
+  "last_run_status": "never",
+  "seen": {
+    "claude-code":      { "max": null, "ids": [] },
+    "claude-agent-sdk": { "max": null, "ids": [] },
+    "codex":            { "max": null, "ids": [] },
+    "openai-sdk":       { "max": null, "ids": [] }
+  }
+}
