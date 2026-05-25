@@ -1,6 +1,6 @@
 {
-  "weekOf": "2026-05-18",
-  "totalNewItems": 13,
+  "weekOf": "2026-05-25",
+  "totalNewItems": 14,
   "sections": [
     {
       "id": "claude-code",
@@ -9,40 +9,41 @@
       "sourceHomeUrl": "https://code.claude.com/docs/en/changelog",
       "entries": [
         {
-          "id": "2.1.139",
-          "chipLabel": "v2.1.139 · May 11",
-          "chipKind": "feat",
-          "title": "<code>claude agents</code> dashboard + <code>/goal</code> command",
-          "paragraph": "New <code>claude agents</code> opens a dashboard listing every active session in one place. New <code>/goal</code> sets a completion condition and displays elapsed time, turn count, and token spend live during the run.",
-          "whyItMatters": "Visibility across parallel work without tab-hopping, plus a hard stop so runaway agents stop burning tokens.",
-          "sourceUrl": "https://code.claude.com/docs/en/changelog",
-          "example": { "lang": "claude session", "code": "/goal Review changed files and stop after one PR comment per finding" }
-        },
-        {
-          "id": "2.1.142",
-          "chipLabel": "v2.1.142 · May 14",
-          "chipKind": "new",
-          "title": "Opus 4.7 is now the Fast-mode default",
-          "paragraph": "Hitting <code>/fast</code> now uses Opus 4.7 instead of 4.6. Same latency profile, smarter model. Override with <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1</code> if you need the old one.",
-          "whyItMatters": "Free quality bump on every Fast-mode invocation. No code change.",
+          "id": "2.1.147",
+          "chipLabel": "v2.1.147 · May 21",
+          "chipKind": "break",
+          "title": "Breaking: <code>/simplify</code> renamed to <code>/code-review</code>",
+          "paragraph": "The slash command <code>/simplify</code> is gone. Use <code>/code-review</code> instead. The new command takes effort levels (<code>low</code> / <code>medium</code> / <code>high</code>) and can post findings directly as GitHub PR comments. Pinned background sessions also now stay alive when idle instead of timing out.",
+          "whyItMatters": "Any CI script, hook, or alias that types <code>/simplify</code> stops working today. One-line rename, but you have to ship it.",
+          "example": { "lang": "shell", "code": "# scan repo for stale references\nrg -F '/simplify' .github scripts\n# replace with /code-review medium" },
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.143",
-          "chipLabel": "v2.1.143 · May 15",
+          "id": "2.1.148",
+          "chipLabel": "v2.1.148 · May 22",
           "chipKind": "feat",
-          "title": "Plugin dependency enforcement",
-          "paragraph": "You can no longer disable a plugin that other plugins depend on. The dependency graph is read and the toggle is blocked with a clear error. The marketplace UI also now shows projected context cost per plugin before install.",
-          "whyItMatters": "Stops the silent broken-plugin cascade and surfaces context cost before you pay it.",
+          "title": "Critical fix: Bash tool exit code 127 regression",
+          "paragraph": "Version 2.1.147 introduced a regression where every Bash command returned exit code 127 (\"command not found\"), making the Bash tool unusable. 2.1.148 fixes it. Anyone who auto-bumped past 2.1.146 should re-check that they did not get stuck on 2.1.147.",
+          "whyItMatters": "If your team uses Bash-heavy workflows and auto-updates Claude Code, a quiet day on 2.1.147 was actually a broken day. Bump to 2.1.148+ now.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.141",
-          "chipLabel": "v2.1.141 · May 13",
+          "id": "2.1.149",
+          "chipLabel": "v2.1.149 · May 22",
           "chipKind": "feat",
-          "title": "Hooks can emit desktop-notification terminal sequences",
-          "paragraph": "Hooks now support a <code>terminalSequence</code> output for desktop notifications without taking control of the terminal. Also: <code>CLAUDE_CODE_PLUGIN_PREFER_HTTPS</code> for environments without SSH.",
-          "whyItMatters": "Background sessions can ping you when something needs attention instead of silently waiting.",
+          "title": "<code>/usage</code> per-category breakdown + markdown task lists in output",
+          "paragraph": "<code>/usage</code> now splits token spend by category (input / output / cache hits / tools). <code>/diff</code> got proper scrolling for big diffs. Assistant output renders GitHub-style markdown task lists (<code>- [ ]</code>) as interactive checkboxes. PowerShell security hardening on Windows.",
+          "whyItMatters": "Concrete budget visibility instead of a single opaque number — easy to see where the cache is or is not helping.",
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        },
+        {
+          "id": "2.1.144",
+          "chipLabel": "v2.1.144 · May 19",
+          "chipKind": "break",
+          "title": "<code>/model</code> is now session-only scope + <code>/resume</code> for background sessions",
+          "paragraph": "Changing the model with <code>/model</code> no longer persists across sessions — it applies to the current session only. To set the project default, edit settings. Background sessions can now be resumed with <code>/resume</code>, and the plugin marketplace shows richer plugin details.",
+          "whyItMatters": "Teams who relied on <code>/model</code> as a sticky preference will be surprised. Set the default in settings.json instead.",
+          "example": { "lang": "json", "code": "// ~/.claude/settings.json\n{\n  \"defaultModel\": \"claude-opus-4-7\"\n}" },
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         }
       ]
@@ -54,23 +55,23 @@
       "sourceHomeUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases",
       "entries": [
         {
-          "id": "v0.3.142",
-          "chipLabel": "v0.3.142 · May 14",
-          "chipKind": "break",
-          "title": "Breaking: v2 session API removed",
-          "paragraph": "The unstable v2 session helpers (<code>unstable_v2_createSession</code> and friends) are gone. Use <code>query()</code> instead. Also: MCP servers now connect in the background — sessions start immediately with <code>status: \"pending\"</code> while slow servers warm up.",
-          "whyItMatters": "If any code imports <code>unstable_v2_*</code> the build breaks today. <code>query()</code> covers the same surface and the docs are now stable.",
-          "example": { "lang": "ts", "code": "// before\nconst s = await unstable_v2_createSession({ model });\n\n// after\nimport { query } from \"@anthropic-ai/claude-agent-sdk\";\nconst r = await query({ model, prompt });" },
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.142"
+          "id": "v0.3.149",
+          "chipLabel": "v0.3.149 · May 22",
+          "chipKind": "feat",
+          "title": "Custom env var passthrough preserves SDK version headers",
+          "paragraph": "Supplying a custom <code>env</code> map to the SDK used to wipe out the SDK's own version/telemetry headers. Fixed in 0.3.149 — your custom env is merged with the SDK's defaults instead of replacing them.",
+          "whyItMatters": "If you scope env tightly (e.g. <code>{ PATH, HOME }</code> only) the SDK now keeps its identifying headers, which Anthropic uses to triage support tickets.",
+          "example": { "lang": "ts", "code": "// previously dropped SDK headers — now safe\nawait query({\n  prompt,\n  env: { PATH: process.env.PATH!, HOME: process.env.HOME! }\n});" },
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.149"
         },
         {
-          "id": "v0.3.143",
-          "chipLabel": "v0.3.143 · May 15",
+          "id": "v0.3.150",
+          "chipLabel": "v0.3.150 · May 23",
           "chipKind": "feat",
-          "title": "<code>@anthropic-ai/sdk</code> moved to peerDependencies",
-          "paragraph": "<code>@anthropic-ai/sdk</code> and <code>@modelcontextprotocol/sdk</code> are now peer deps instead of direct deps. Auto-installed by npm / bun / pnpm so runtime is unchanged.",
-          "whyItMatters": "Smaller bundles, no duplicate copies in node_modules, fewer version conflicts. Old lockfiles may emit a peer warning — rerun install to fix.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.143"
+          "title": "Parity with Claude Code 2.1.150",
+          "paragraph": "Roll-up release matching the underlying Claude Code 2.1.150 binary. No standalone SDK feature changes — bump to stay aligned with the CLI behavior changes from the week (renamed /simplify, /resume, /usage breakdown).",
+          "whyItMatters": "If you ship the Agent SDK in production and want users to get the same UX as the CLI, this is the version to pin.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.150"
         }
       ]
     },
@@ -78,79 +79,92 @@
       "id": "codex",
       "label": "Codex",
       "emoji": "🟢",
-      "sourceHomeUrl": "https://developers.openai.com/codex/changelog?type=codex-app",
+      "sourceHomeUrl": "https://github.com/openai/codex/releases",
       "entries": [
         {
-          "id": "2026-05-14-work-with-codex-from-anywhere",
-          "chipLabel": "May 14",
+          "id": "rust-v0.133.0",
+          "chipLabel": "v0.133.0 · May 21",
           "chipKind": "feat",
-          "title": "Work with Codex from anywhere",
-          "paragraph": "Connect a Mac running Codex to the ChatGPT mobile app. From your phone you can see project files, change configuration, and trigger runs on the desktop.",
-          "whyItMatters": "Replaces the ssh-home-to-check-the-long-run workflow. No tunneling, no VPN, no port-forward.",
-          "sourceUrl": "https://developers.openai.com/codex/remote-connections"
+          "title": "Goals on by default + foreground <code>remote-control</code>",
+          "paragraph": "Codex \"Goals\" (persisted completion conditions across turns) are now on by default with dedicated storage. <code>codex remote-control</code> now runs as a foreground command that waits for readiness and reports status — separate <code>start</code> / <code>stop</code> commands cover the daemon style. Permission profiles gained list APIs, inheritance, managed <code>requirements.toml</code>, and stronger Windows sandbox integration.",
+          "whyItMatters": "Goals = automatic guardrails on long sessions. Foreground remote-control means scripts no longer need readiness-polling hacks. Inherited permission profiles let teams ship one base profile and extend per project.",
+          "example": { "lang": "shell", "code": "# foreground mode (default now)\ncodex remote-control --workspace ./repo\n\n# daemon mode\ncodex remote-control start --workspace ./repo\ncodex remote-control stop" },
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.133.0"
         },
         {
-          "id": "2026-05-07-codex-for-chrome",
-          "chipLabel": "May 7",
+          "id": "rust-v0.132.0",
+          "chipLabel": "v0.132.0 · May 20",
           "chipKind": "feat",
-          "title": "Codex for Chrome — extension launches",
-          "paragraph": "Browser extension that runs Codex across multiple tabs in parallel without taking control of your mouse. Per-site allow-list controls which tabs it can touch.",
-          "whyItMatters": "Useful for batch web tasks (filling many admin forms, scraping multiple dashboards) that run while you keep working in other tabs.",
-          "sourceUrl": "https://developers.openai.com/codex/app/chrome-extension"
+          "title": "Python SDK auth + <code>codex exec resume --output-schema</code>",
+          "paragraph": "The Codex Python SDK now does first-class auth — API key, ChatGPT browser flow, device-code flow, account inspection, logout. <code>codex exec resume</code> accepts <code>--output-schema</code>, so resumed automations enforce JSON structure on the resumed turn. Faster TUI startup via batched terminal capability probes.",
+          "whyItMatters": "Schema-validated resumes plug a long-standing gap — long-running jobs survive interruptions without losing typed output guarantees.",
+          "example": { "lang": "shell", "code": "codex exec resume <session-id> \\\n  --output-schema ./schemas/diff-result.json" },
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.132.0"
         },
         {
-          "id": "2026-05-08-codex-cli-0-130-0",
-          "chipLabel": "May 8",
-          "chipKind": "new",
-          "title": "Codex CLI 0.130.0 — visible plugin hooks + Bedrock auth",
-          "paragraph": "Plugin details now show every hook the plugin bundles before you install. Bedrock auth uses your AWS console-login credentials directly. App-server gained pagination for large thread histories.",
-          "whyItMatters": "Audit plugins before installing them instead of trusting blindly. AWS users get a much shorter setup path.",
-          "sourceUrl": "https://github.com/openai/codex/pull/21637"
+          "id": "rust-v0.131.0",
+          "chipLabel": "v0.131.0 · May 18",
+          "chipKind": "feat",
+          "title": "Unified <code>@</code> picker + plugin marketplace CLI",
+          "paragraph": "<code>@</code> mentions now search files, directories, plugins, and skills in one picker (backed by app-server metadata). TUI got service-tier commands, blended token usage, approval-mode display, and responsive Markdown tables. Plugin marketplace gained CLI commands, version-aware sharing, share checkout, and default-enabled plugin hooks.",
+          "whyItMatters": "One picker for every reference type drops the mental overhead of remembering which prefix attaches what. Marketplace CLI means plugin sharing finally fits into shell-based workflows.",
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.131.0"
         },
         {
-          "id": "2026-05-07-codex-cli-0-129-0",
-          "chipLabel": "May 7",
-          "chipKind": "new",
-          "title": "Codex CLI 0.129.0 — Vim modal editing in TUI",
-          "paragraph": "The TUI composer supports modal Vim editing. The resume/fork picker got redesigned. Plugin management can share state across workspaces.",
-          "whyItMatters": "If you live in vim, the Codex TUI no longer fights your muscle memory.",
-          "sourceUrl": "https://github.com/openai/codex/pull/20065"
+          "id": "rust-v0.130.0",
+          "chipLabel": "v0.130.0 · May 8",
+          "chipKind": "feat",
+          "title": "Visible plugin hooks + AWS console-login Bedrock auth",
+          "paragraph": "Plugin details now show every hook the plugin bundles before you install. Bedrock auth uses AWS console-login credentials via <code>aws login</code> profiles directly. App-server clients can page large threads with summary or full views.",
+          "whyItMatters": "Audit plugins for surprising hooks before installing instead of post-hoc. AWS users get a shorter setup path — no manual STS dance.",
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.130.0"
         }
       ]
     },
     {
       "id": "openai-sdk",
-      "label": "OpenAI SDK",
+      "label": "OpenAI Node SDK",
       "emoji": "🧬",
-      "sourceHomeUrl": "https://developers.openai.com/api/docs/changelog",
+      "sourceHomeUrl": "https://github.com/openai/openai-node/releases",
       "entries": [
         {
-          "id": "2026-05-12-deprecated-dall-e-and-realtime-beta",
-          "chipLabel": "May 12",
-          "chipKind": "break",
-          "title": "Breaking: DALL·E 2 / DALL·E 3 removed",
-          "paragraph": "The <code>dall-e-2</code> and <code>dall-e-3</code> models are no longer served. Migrate to <code>gpt-image-2</code>, <code>gpt-image-1</code>, or <code>gpt-image-1-mini</code>. The Realtime API Beta is also deprecated with a migration guide.",
-          "whyItMatters": "Any code that still passes <code>model: \"dall-e-3\"</code> to <code>images.generate</code> returns 404 today. One-line model id change, but you have to ship it.",
-          "example": { "lang": "ts", "code": "// before — now 404\nopenai.images.generate({ model: \"dall-e-3\", prompt });\n\n// after\nopenai.images.generate({ model: \"gpt-image-2\", prompt });" },
-          "sourceUrl": "https://developers.openai.com/api/docs/deprecations"
-        },
-        {
-          "id": "2026-05-07-realtime-2-translate-whisper",
-          "chipLabel": "May 7",
-          "chipKind": "new",
-          "title": "Realtime 2 — voice, Translate, Whisper",
-          "paragraph": "New realtime voice model with configurable reasoning depth. Plus dedicated APIs for streaming speech-to-speech translation and streaming Whisper transcription.",
-          "whyItMatters": "If you build voice features, this is the new default. Separate Translate and Whisper endpoints let you keep pipelines simple — no more rolling your own.",
-          "sourceUrl": "https://developers.openai.com/api/docs/guides/realtime"
-        },
-        {
-          "id": "2026-05-06-agents-sdk-typescript",
-          "chipLabel": "May 6",
+          "id": "v6.39.0",
+          "chipLabel": "v6.39.0 · May 21",
           "chipKind": "feat",
-          "title": "OpenAI Agents SDK now in TypeScript",
-          "paragraph": "The Agents SDK ships a TypeScript version with sandboxed agent execution and an open-source harness built in.",
-          "whyItMatters": "Real shortcut for Node services that have been wiring tool-calls by hand. Sandboxed exec means an agent can run code without owning your machine.",
-          "sourceUrl": "https://developers.openai.com/api/docs/guides/agents"
+          "title": "API surface updates — types and helpers",
+          "paragraph": "Routine API spec sync — new response field types and helper updates pulled from the upstream OpenAPI spec. No removals; existing code keeps working. Safe to bump.",
+          "whyItMatters": "Stay current so TypeScript types match the live API shape. Skipping a release means missing new optional fields.",
+          "example": { "lang": "shell", "code": "npm i openai@^6.39.0\n# or\nbun add openai@^6.39.0" },
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.39.0"
+        },
+        {
+          "id": "v6.38.0",
+          "chipLabel": "v6.38.0 · May 15",
+          "chipKind": "feat",
+          "title": "<code>service_tier</code> parameter on responses compact",
+          "paragraph": "<code>responses.compact()</code> now accepts a <code>service_tier</code> parameter. Pass <code>\"priority\"</code> for latency-sensitive paths, <code>\"flex\"</code> for cost-sensitive batch jobs, or leave undefined for the account default.",
+          "whyItMatters": "Per-call tier selection is a direct cost / latency lever — important for services with mixed interactive and batch workloads.",
+          "example": { "lang": "ts", "code": "await openai.responses.compact({\n  model: \"gpt-5\",\n  input: prompt,\n  service_tier: \"flex\"  // batch path\n});" },
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.38.0"
+        },
+        {
+          "id": "v6.37.0",
+          "chipLabel": "v6.37.0 · May 7",
+          "chipKind": "feat",
+          "title": "Realtime translate + <code>web_search_call.results</code> in responses",
+          "paragraph": "Launches the new <code>realtime.translate</code> endpoint and an updated <code>image_2</code> model. The <code>web_search_call.results</code> include option on the Responses API now returns the raw search hits used by the model. Admin organization usage responses gained a <code>quantity</code> field.",
+          "whyItMatters": "Surfacing search results lets you display sources to the user (citations) instead of trusting the model's paraphrase blind.",
+          "example": { "lang": "ts", "code": "const r = await openai.responses.create({\n  model: \"gpt-5\",\n  input: q,\n  tools: [{ type: \"web_search\" }],\n  include: [\"web_search_call.results\"]\n});\n// r.output[].search_results now populated" },
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.37.0"
+        },
+        {
+          "id": "v6.36.0",
+          "chipLabel": "v6.36.0 · May 4",
+          "chipKind": "feat",
+          "title": "Per-endpoint Admin API Keys + admin metadata fields",
+          "paragraph": "Admin API Keys can now be scoped to specific endpoints instead of full org access. Admin resources gained <code>group_type</code> / user metadata fields. Several admin API update calls flow through more cleanly with typed responses.",
+          "whyItMatters": "Tightens the blast radius of admin keys — useful for ops tools that only need one operation, not full admin authority.",
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.36.0"
         }
       ]
     }
@@ -158,52 +172,53 @@
   "suggestions": [
     {
       "num": 1,
-      "title": "Audit every <code>dall-e-*</code> call site before it 404s",
+      "title": "Grep for <code>/simplify</code> across CI scripts and dotfiles before Monday",
       "chipLabel": "Breaking risk",
       "chipKind": "break",
-      "paragraph": "OpenAI removed the DALL·E 2 and DALL·E 3 models on May 12. Any service still calling <code>images.generate({ model: \"dall-e-2\" })</code> or <code>\"dall-e-3\"</code> returns 404 right now.",
-      "whyItMatters": "One-line fix per call site, but you have to find them all. The model usually fails silently — paths exercised rarely won't surface the break until a real user hits them.",
-      "example": { "lang": "bash", "code": "# find every call site in your codebase\nrg 'model:\\s*[\"'\\''\"](dall-e-[23])[\"'\\''\"]' --type ts\n\n# then change model to gpt-image-2 (drop-in replacement)" },
-      "tiesTo": "OpenAI SDK · May 12 — DALL·E deprecation"
+      "paragraph": "Claude Code 2.1.147 removed <code>/simplify</code> in favor of <code>/code-review</code>. Any GitHub Action, alias, hook, or runbook that invokes <code>/simplify</code> silently no-ops on a fresh CLI install.",
+      "whyItMatters": "Rename now while it's quiet. Wait until you need it in a fire-drill and it's a much worse moment to debug.",
+      "example": { "lang": "bash", "code": "rg -F '/simplify' .github .claude scripts docs\n# replace each with: /code-review medium  (or high for security audits)" },
+      "tiesTo": "claude-code · v2.1.147 — /simplify renamed to /code-review"
     },
     {
       "num": 2,
-      "title": "Grep for <code>unstable_v2_</code> before the next Agent SDK bump",
-      "chipLabel": "Breaking risk",
-      "chipKind": "break",
-      "paragraph": "Claude Agent SDK v0.3.142 removed the v2 session API. If any tool, worker, or test imports <code>unstable_v2_createSession</code> (or its siblings), the next dependency bump kills the build.",
-      "whyItMatters": "Dependabot tends to propose Agent SDK bumps quietly. Catching this now avoids a red-CI fire-drill later.",
-      "example": { "lang": "bash", "code": "rg 'unstable_v2_' --type ts\n# migrate hits to:\n#   import { query } from \"@anthropic-ai/claude-agent-sdk\"\n#   const r = await query({ model, prompt, cwd })" },
-      "tiesTo": "Claude Agent SDK · v0.3.142 — v2 session API removed"
+      "title": "Pin Claude Code minors in CI — skip 2.1.147",
+      "chipLabel": "Stability",
+      "chipKind": "safe",
+      "paragraph": "The 2.1.147 → 2.1.148 episode (Bash returning 127 on every command) is a textbook case for not auto-bumping the CLI in CI. Pin the patch version and bump deliberately.",
+      "whyItMatters": "An auto-bumped CI silently failing because every Bash step returns 127 is the worst kind of broken — green-looking, actually broken.",
+      "example": { "lang": "yaml", "code": "# .github/workflows/claude.yml\n- run: npm i -g @anthropic-ai/claude-code@2.1.149  # pin, do not float" },
+      "tiesTo": "claude-code · v2.1.148 — Bash exit 127 regression fix"
     },
     {
       "num": 3,
-      "title": "Wrap long unattended Claude sessions with <code>/goal</code>",
-      "chipLabel": "DX win",
-      "chipKind": "feat",
-      "paragraph": "Any nightly automation, batch PR review, or CI-triggered Claude pass benefits from a hard done-condition. <code>/goal</code> sets one and shows a live overlay of elapsed time, turns, and token spend.",
-      "whyItMatters": "Catch runaway loops in seconds instead of finding them in next month's invoice.",
-      "example": { "lang": "claude session", "code": "/goal Stop after producing a single PR comment per finding" },
-      "tiesTo": "claude-code · v2.1.139 — /goal command"
+      "title": "Adopt Codex permission-profile inheritance for multi-project workspaces",
+      "chipLabel": "Security",
+      "chipKind": "safe",
+      "paragraph": "Codex 0.133.0 added permission-profile inheritance and a managed <code>requirements.toml</code>. Define one base profile (network deny, fs scoped to project root) and have per-project profiles extend it instead of copy-pasting.",
+      "whyItMatters": "Single source of truth for tool permissions. New project = one short delta file, not a 50-line config you forgot to update.",
+      "example": { "lang": "toml", "code": "# ~/.codex/profiles/base.toml\n[permissions]\nnetwork = \"deny\"\nfs_write = [\"$WORKSPACE\"]\n\n# ./project/.codex/profile.toml\n[profile]\nextends = \"base\"\n\n[permissions]\nnetwork = \"allow\"  # this project needs it" },
+      "tiesTo": "Codex · v0.133.0 — permission profile inheritance"
     },
     {
       "num": 4,
-      "title": "Drop the Opus 4.6 Fast-mode override env var",
-      "chipLabel": "Free upgrade",
-      "chipKind": "tip",
-      "paragraph": "Claude Code v2.1.142 made Opus 4.7 the Fast-mode default. Anyone on the team still pinning Opus 4.6 via <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1</code> should drop the pin — there's no quality reason to keep it.",
-      "whyItMatters": "Zero code change. Smarter model on every <code>/fast</code> call.",
-      "example": { "lang": "shell", "code": "# audit dotfiles + CI env\nrg 'CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE'\n# remove the export and reload" },
-      "tiesTo": "claude-code · v2.1.142 — Opus 4.7 Fast-mode default"
+      "title": "Route batch jobs through <code>service_tier: \"flex\"</code>",
+      "chipLabel": "Cost",
+      "chipKind": "cost",
+      "paragraph": "If your service has a batch path (overnight reports, bulk classification, async enrichment) that does not need interactive latency, pass <code>service_tier: \"flex\"</code> on Responses calls. The new SDK exposes it explicitly per call.",
+      "whyItMatters": "Flex pricing meaningfully undercuts the default tier for jobs that can tolerate slower turn-around. Easy lever, real money over a month.",
+      "example": { "lang": "ts", "code": "async function classifyBatch(items: string[]) {\n  return Promise.all(items.map(input =>\n    openai.responses.compact({\n      model: \"gpt-5\",\n      input,\n      service_tier: \"flex\"  // accept latency, save cost\n    })\n  ));\n}" },
+      "tiesTo": "OpenAI Node SDK · v6.38.0 — service_tier on responses compact"
     },
     {
       "num": 5,
-      "title": "Try Codex for Chrome on batch admin tasks",
-      "chipLabel": "Try this",
+      "title": "Surface web-search citations using <code>web_search_call.results</code>",
+      "chipLabel": "Trust",
       "chipKind": "tip",
-      "paragraph": "Codex for Chrome runs across multiple tabs in parallel without grabbing your mouse. Permissions are scoped per site, so you can let it touch one admin panel without giving it the whole browser.",
-      "whyItMatters": "Replaces hand-grinding through repetitive web tasks (form fills, status checks, dashboard exports). Time saver for ops work.",
-      "tiesTo": "Codex · May 7 — Codex for Chrome"
+      "paragraph": "Including <code>web_search_call.results</code> in your Responses API call returns the raw sources the model consulted. Display them next to the model's answer so users can verify claims rather than trusting paraphrase.",
+      "whyItMatters": "Public assistants live or die on perceived trustworthiness. Showing sources is cheap to ship and shifts user perception fast.",
+      "example": { "lang": "ts", "code": "const r = await openai.responses.create({\n  model: \"gpt-5\",\n  input: query,\n  tools: [{ type: \"web_search\" }],\n  include: [\"web_search_call.results\"]\n});\n\nconst sources = r.output\n  .flatMap(o => o.type === \"web_search_call\" ? o.search_results : []);\n// render sources alongside r.output_text in the UI" },
+      "tiesTo": "OpenAI Node SDK · v6.37.0 — web_search_call.results include option"
     }
   ]
 }
