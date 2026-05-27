@@ -9,17 +9,39 @@ below.
 - **Slack recipient (DM):** `U07UGA2LXT3` (matanel weizman)
 - **GitHub Pages URL:** `https://matanel-weizman.github.io/AI-Tools-Weekly/`
 - **Sources:**
-  | Source              | URL                                                                                | Diff key                  |
-  |---------------------|------------------------------------------------------------------------------------|---------------------------|
-  | `claude-code`       | https://code.claude.com/docs/en/changelog                                          | version e.g. `2.1.143`    |
-  | `claude-agent-sdk`  | https://api.github.com/repos/anthropics/claude-agent-sdk-typescript/releases       | tag e.g. `v0.3.143`       |
-  | `codex`             | https://api.github.com/repos/openai/codex/releases                                 | tag e.g. `rust-v0.131.0`  |
-  | `openai-sdk`        | https://api.github.com/repos/openai/openai-node/releases                           | tag e.g. `v6.38.0`        |
+  | Source              | URL                                                                                | Diff key                          |
+  |---------------------|------------------------------------------------------------------------------------|-----------------------------------|
+  | `claude-code`       | https://code.claude.com/docs/en/changelog                                          | version e.g. `2.1.143`            |
+  | `claude-agent-sdk`  | https://api.github.com/repos/anthropics/claude-agent-sdk-typescript/releases       | tag e.g. `v0.3.143`               |
+  | `codex`             | https://api.github.com/repos/openai/codex/releases                                 | tag e.g. `rust-v0.131.0`          |
+  | `openai-sdk`        | https://api.github.com/repos/openai/openai-node/releases                           | tag e.g. `v6.38.0`                |
+  | `mcp`               | TWO URLs (see below) merged into one section                                       | prefixed id `spec:...` / `news:...` |
 
   *Note:* `developers.openai.com` blocks WebFetch from cloud-egress IPs (403),
   so codex + openai-sdk use the GitHub Releases API instead. claude-code's
   doc page works because Anthropic's CDN is permissive. claude-agent-sdk
-  uses the GitHub API for the same reason.
+  and mcp (spec half) use the GitHub API for the same reason.
+
+  *MCP source — two upstreams, one section:*
+  The `mcp` source fans out to TWO WebFetch calls and merges the results
+  into a single `DigestSection`. Ids are prefixed to keep the two streams
+  distinguishable inside `state.seen.mcp.ids`:
+
+  1. **MCP spec releases.** WebFetch
+     `https://api.github.com/repos/modelcontextprotocol/modelcontextprotocol/releases`.
+     Tags are dated (`YYYY-MM-DD`). Id = `spec:<tag>` (e.g. `spec:2026-05-22`).
+     If the releases list is empty, fall back to fetching
+     `https://modelcontextprotocol.io/specification/draft/changelog` and
+     treat each dated heading as an entry with id `spec:<YYYY-MM-DD>`.
+  2. **Anthropic MCP announcements.** WebFetch
+     `https://www.anthropic.com/news` with an explicit filter: return ONLY
+     posts whose title or summary references MCP / Model Context Protocol /
+     connectors / context servers. Skip everything else. Id =
+     `news:<YYYY-MM-DD>-<slug-from-url>` (e.g. `news:2026-05-15-mcp-update`).
+
+  Lexicographic compare still works because both prefixes are stable strings
+  and the date suffix is monotonic. When deciding "new", apply the standard
+  `isNew` check against `state.seen.mcp` for each fetched id.
 
 ## Constraints
 
@@ -74,6 +96,7 @@ below.
      - `claude-agent-sdk` → emoji `🤖`, label `Claude Agent SDK`, sourceHomeUrl `https://github.com/anthropics/claude-agent-sdk-typescript/releases`
      - `codex` → emoji `🟢`, label `Codex`, sourceHomeUrl `https://github.com/openai/codex/releases`
      - `openai-sdk` → emoji `🧬`, label `OpenAI Node SDK`, sourceHomeUrl `https://github.com/openai/openai-node/releases`
+     - `mcp` → emoji `🔌`, label `MCP`, sourceHomeUrl `https://modelcontextprotocol.io/specification` (spec entries link to their release/changelog URL; news entries link to the post URL)
    - Each entry: `chipLabel` = `"<tag> · <Month D>"` (e.g. `"v6.38.0 · May 15"`).
      `chipKind` is `break` for any deprecation or removal; `new` for
      additions; `feat` otherwise. Paragraph = 1–3 short sentences, plain English, may use

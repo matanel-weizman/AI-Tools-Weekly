@@ -1,4 +1,9 @@
-export type SourceId = "claude-code" | "claude-agent-sdk" | "codex" | "openai-sdk";
+export type SourceId =
+  | "claude-code"
+  | "claude-agent-sdk"
+  | "codex"
+  | "openai-sdk"
+  | "mcp";
 
 export type ChipKind = "new" | "feat" | "break" | "tip" | "cost" | "safe";
 

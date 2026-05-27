@@ -6,6 +6,7 @@ const SOURCES: SourceId[] = [
   "claude-agent-sdk",
   "codex",
   "openai-sdk",
+  "mcp",
 ];
 const MAX_KEPT = 20;
 
