@@ -1,6 +1,6 @@
 {
   "weekOf": "2026-06-01",
-  "totalNewItems": 11,
+  "totalNewItems": 12,
   "sections": [
     {
       "id": "claude-code",
@@ -139,6 +139,24 @@
           "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.39.1"
         }
       ]
+    },
+    {
+      "id": "mcp",
+      "label": "MCP",
+      "emoji": "🔌",
+      "sourceHomeUrl": "https://modelcontextprotocol.io/specification",
+      "entries": [
+        {
+          "id": "spec:2026-07-28-RC",
+          "chipLabel": "spec 2026-07-28-RC · May 29",
+          "chipKind": "break",
+          "title": "MCP goes stateless · <code>initialize</code> handshake removed · big deprecation pass",
+          "paragraph": "Release candidate for the next stable MCP spec (2026-07-28). Removes the <code>initialize</code> / <code>notifications/initialized</code> handshake and the <code>Mcp-Session-Id</code> header — every request now carries protocol version, client identity, and capabilities in <code>_meta</code>. Introduces a required <code>server/discover</code> RPC, replaces the GET endpoint and <code>resources/subscribe</code>/<code>unsubscribe</code> with a single <code>subscriptions/listen</code> stream, and removes <code>ping</code>, <code>logging/setLevel</code>, and <code>notifications/roots/list_changed</code>. Roots, Sampling, and Logging features are now <strong>deprecated</strong>; HTTP+SSE transport reclassified as deprecated.",
+          "whyItMatters": "Any server you ship that relies on the handshake, session ids, GET-stream subscriptions, or Roots/Sampling/Logging will need a migration plan before the stable cuts. Twelve-month deprecation window starts from the stable release, but SDKs will move at their own pace.",
+          "example": { "lang": "ts", "code": "// new per-request meta replaces the initialize handshake\nawait client.callTool('search', { q }, {\n  _meta: {\n    'io.modelcontextprotocol/protocolVersion': '2026-07-28',\n    'io.modelcontextprotocol/clientInfo': { name: 'my-app', version: '1.0' },\n    'io.modelcontextprotocol/clientCapabilities': { /* ... */ }\n  }\n});" },
+          "sourceUrl": "https://github.com/modelcontextprotocol/modelcontextprotocol/releases/tag/2026-07-28-RC"
+        }
+      ]
     }
   ],
   "suggestions": [
@@ -184,6 +202,16 @@
     },
     {
       "num": 5,
+      "title": "Audit MCP servers for the 2026-07-28 RC breaking removals",
+      "chipLabel": "Breaking risk",
+      "chipKind": "break",
+      "paragraph": "The 2026-07-28 RC removes the <code>initialize</code>/<code>notifications/initialized</code> handshake, <code>Mcp-Session-Id</code>, <code>ping</code>, <code>logging/setLevel</code>, and <code>notifications/roots/list_changed</code>. It deprecates Roots, Sampling, Logging, and the HTTP+SSE transport. If you ship an MCP server, walk the surface and tag what needs to move before the stable cuts.",
+      "whyItMatters": "Twelve-month deprecation window sounds long until you remember SDKs adopt at their own pace and your users may bump faster than you do. Doing the audit now means migrations land on your schedule, not a support ticket's.",
+      "example": { "lang": "shell", "code": "# grep for the removed/deprecated surface in your MCP server\nrg -F 'initialize|Mcp-Session-Id|logging/setLevel|roots/list_changed' src\nrg -F 'resources/subscribe|resources/unsubscribe' src\n# plan: move to subscriptions/listen + per-request _meta" },
+      "tiesTo": "MCP · spec 2026-07-28-RC — stateless protocol + handshake removed"
+    },
+    {
+      "num": 6,
       "title": "Move repo-local skills under <code>.claude/skills/</code> to skip the marketplace dance",
       "chipLabel": "Tip",
       "chipKind": "tip",

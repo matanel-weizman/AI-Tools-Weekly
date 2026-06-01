@@ -481,7 +481,7 @@
       <span class="brand-divider"></span>
       <span class="brand-product">What's New in AI Tools</span>
     </div>
-    <p>Mon 2026-06-01 · 11 fresh items across 4 tools · 5 practical ideas</p>
+    <p>Mon 2026-06-01 · 12 fresh items across 5 tools · 6 practical ideas</p>
   </div>
   <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
     <span id="themeIcon">🌗</span><span id="themeLabel">Auto</span>
@@ -492,7 +492,8 @@
   <button data-tab="claude-agent-sdk"><span class="emoji">🤖</span>Claude Agent SDK<span class="count">4</span></button>
   <button data-tab="codex"><span class="emoji">🟢</span>Codex<span class="count">2</span></button>
   <button data-tab="openai-sdk"><span class="emoji">🧬</span>OpenAI Node SDK<span class="count">1</span></button>
-  <button data-tab="ideas"><span class="emoji">🎯</span>Practical ideas<span class="count">5</span></button></nav>
+  <button data-tab="mcp"><span class="emoji">🔌</span>MCP<span class="count">1</span></button>
+  <button data-tab="ideas"><span class="emoji">🎯</span>Practical ideas<span class="count">6</span></button></nav>
 
 
 <section class="tab-panel active" id="tab-claude-code">
@@ -666,11 +667,38 @@ npm i openai@^6.39.1</pre>
       <a class="source" href="https://github.com/openai/openai-node/releases/tag/v6.39.1">Read entry →</a>
     </div></div>
 </section>
+<section class="tab-panel" id="tab-mcp">
+  <div class="section-head">
+    <div class="section-emoji">🔌</div>
+    <div>
+      <h2>MCP</h2>
+      <div class="sub">Source · <a href="https://modelcontextprotocol.io/specification">modelcontextprotocol.io/specification</a></div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <h3>MCP goes stateless · <code>initialize</code> handshake removed · big deprecation pass</h3>
+        <span class="chip chip-break">spec 2026-07-28-RC · May 29</span>
+      </div>
+      <p>Release candidate for the next stable MCP spec (2026-07-28). Removes the <code>initialize</code> / <code>notifications/initialized</code> handshake and the <code>Mcp-Session-Id</code> header — every request now carries protocol version, client identity, and capabilities in <code>_meta</code>. Introduces a required <code>server/discover</code> RPC, replaces the GET endpoint and <code>resources/subscribe</code>/<code>unsubscribe</code> with a single <code>subscriptions/listen</code> stream, and removes <code>ping</code>, <code>logging/setLevel</code>, and <code>notifications/roots/list_changed</code>. Roots, Sampling, and Logging features are now &lt;strong&gt;deprecated&lt;/strong&gt;; HTTP+SSE transport reclassified as deprecated.</p>
+      <div class="why">Any server you ship that relies on the handshake, session ids, GET-stream subscriptions, or Roots/Sampling/Logging will need a migration plan before the stable cuts. Twelve-month deprecation window starts from the stable release, but SDKs will move at their own pace.</div>
+      <pre class="code-block"><span class="lang">ts</span>// new per-request meta replaces the initialize handshake
+await client.callTool(&#39;search&#39;, { q }, {
+  _meta: {
+    &#39;io.modelcontextprotocol/protocolVersion&#39;: &#39;2026-07-28&#39;,
+    &#39;io.modelcontextprotocol/clientInfo&#39;: { name: &#39;my-app&#39;, version: &#39;1.0&#39; },
+    &#39;io.modelcontextprotocol/clientCapabilities&#39;: { /* ... */ }
+  }
+});</pre>
+      <a class="source" href="https://github.com/modelcontextprotocol/modelcontextprotocol/releases/tag/2026-07-28-RC">Read entry →</a>
+    </div></div>
+</section>
 <section class="tab-panel" id="tab-ideas">
   <div class="section-head">
     <div class="section-emoji">🎯</div>
     <div>
-      <h2>Practical ideas — 5 ideas this week</h2>
+      <h2>Practical ideas — 6 ideas this week</h2>
       <div class="sub">Concrete ways to use this week's changes in your Node / TypeScript service · each tied to a changelog item above</div>
     </div>
   </div>
@@ -734,6 +762,20 @@ codex --profile work</pre>
     </div>
     <div class="card suggest-card">
       <span class="num">5</span>
+      <div class="card-head">
+        <h3>Audit MCP servers for the 2026-07-28 RC breaking removals</h3>
+        <span class="chip chip-break">Breaking risk</span>
+      </div>
+      <p>The 2026-07-28 RC removes the <code>initialize</code>/<code>notifications/initialized</code> handshake, <code>Mcp-Session-Id</code>, <code>ping</code>, <code>logging/setLevel</code>, and <code>notifications/roots/list_changed</code>. It deprecates Roots, Sampling, Logging, and the HTTP+SSE transport. If you ship an MCP server, walk the surface and tag what needs to move before the stable cuts.</p>
+      <div class="why">Twelve-month deprecation window sounds long until you remember SDKs adopt at their own pace and your users may bump faster than you do. Doing the audit now means migrations land on your schedule, not a support ticket&#39;s.</div>
+      <pre class="code-block"><span class="lang">shell</span># grep for the removed/deprecated surface in your MCP server
+rg -F &#39;initialize|Mcp-Session-Id|logging/setLevel|roots/list_changed&#39; src
+rg -F &#39;resources/subscribe|resources/unsubscribe&#39; src
+# plan: move to subscriptions/listen + per-request _meta</pre>
+      <span class="ties-to">MCP · spec 2026-07-28-RC — stateless protocol + handshake removed</span>
+    </div>
+    <div class="card suggest-card">
+      <span class="num">6</span>
       <div class="card-head">
         <h3>Move repo-local skills under <code>.claude/skills/</code> to skip the marketplace dance</h3>
         <span class="chip chip-tip">Tip</span>
