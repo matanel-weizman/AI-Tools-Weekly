@@ -1,6 +1,6 @@
 {
-  "weekOf": "2026-06-08",
-  "totalNewItems": 13,
+  "weekOf": "2026-06-15",
+  "totalNewItems": 10,
   "sections": [
     {
       "id": "claude-code",
@@ -9,41 +9,40 @@
       "sourceHomeUrl": "https://code.claude.com/docs/en/changelog",
       "entries": [
         {
-          "id": "2.1.160",
-          "chipLabel": "v2.1.160 · Jun 2",
-          "chipKind": "break",
-          "title": "Dynamic-workflow trigger renamed <code>workflow</code> → <code>ultracode</code> · acceptEdits prompts before exec-granting config writes",
-          "paragraph": "The dynamic-workflow trigger keyword changed from <code>workflow</code> to <code>ultracode</code> — the literal word <code>workflow</code> no longer starts a run (asking in your own words still works). <code>acceptEdits</code> mode now prompts before writing shell startup files (<code>.zshenv</code>, <code>.bash_login</code>) and build-tool configs that can execute code (<code>.npmrc</code>, <code>.yarnrc</code>, <code>bunfig.toml</code>, <code>.bazelrc</code>, <code>.pre-commit-config.yaml</code>, <code>.devcontainer/</code>). <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE</code> is now a no-op.",
-          "whyItMatters": "If any script, alias, or onboarding doc tells people to type \"workflow\" to fan out agents, it silently stops triggering — rename to <code>ultracode</code>. The new acceptEdits prompts mean previously-unattended runs may now pause on config writes.",
+          "id": "2.1.170",
+          "chipLabel": "v2.1.170 · Jun 9",
+          "chipKind": "new",
+          "title": "Claude Fable 5 — new Mythos-class model",
+          "paragraph": "Claude Code 2.1.170 adds access to <code>Claude Fable 5</code>, a Mythos-class model Anthropic describes as exceeding any model they had previously made generally available. Update to 2.1.170+ to select it.",
+          "whyItMatters": "A new top-tier model is now selectable for your hardest agentic tasks — worth benchmarking against Opus on your real workloads before committing.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.162",
-          "chipLabel": "v2.1.162 · Jun 3",
-          "chipKind": "break",
-          "title": "WebFetch rules now override preapproved domains · sub-1s MCP timeouts no longer abort every call",
-          "paragraph": "Explicit <code>WebFetch(domain:...)</code> deny/ask/allow rules now take precedence over the built-in preapproved-host auto-allow. MCP per-server <code>timeout</code> values below 1000 ms were being floored to a 1-second watchdog that aborted every tool call; sub-1000 ms values are now ignored (falling back to <code>MCP_TOOL_TIMEOUT</code> or the default). <code>claude agents --json</code> also gains a <code>waitingFor</code> field showing what a blocked session is waiting on.",
-          "whyItMatters": "If you leaned on the preapproved-domain auto-allow while also carrying an explicit WebFetch rule, the explicit rule now wins — re-check your allowlist. Any MCP server pinned to a sub-second timeout was failing every call and now works.",
-          "sourceUrl": "https://code.claude.com/docs/en/changelog"
-        },
-        {
-          "id": "2.1.163",
-          "chipLabel": "v2.1.163 · Jun 4",
+          "id": "2.1.172",
+          "chipLabel": "v2.1.172 · Jun 10",
           "chipKind": "feat",
-          "title": "Pin allowed versions with <code>requiredMinimumVersion</code> / <code>requiredMaximumVersion</code> · <code>/plugin list</code>",
-          "paragraph": "New managed settings <code>requiredMinimumVersion</code> and <code>requiredMaximumVersion</code> make Claude Code refuse to start outside the allowed range and point users to an approved version. Adds <code>/plugin list</code> with <code>--enabled</code>/<code>--disabled</code> filters. Stop and SubagentStop hooks can now return <code>hookSpecificOutput.additionalContext</code> to feed Claude context and keep the turn going without being flagged as a hook error. stdio MCP servers get the same <code>CLAUDE_CODE_SESSION_ID</code> as hooks on <code>--resume</code>.",
-          "whyItMatters": "Version pinning gives admins a reproducible CLI baseline across a team. The Stop-hook <code>additionalContext</code> path lets you nudge the model after a turn without faking an error.",
-          "example": { "lang": "json", "code": "// managed-settings.json\n{\n  \"requiredMinimumVersion\": \"2.1.163\",\n  \"requiredMaximumVersion\": \"2.1.168\"\n}" },
+          "title": "Sub-agents can spawn their own sub-agents (up to 5 levels deep)",
+          "paragraph": "Sub-agents may now dispatch their own sub-agents, nesting up to 5 levels. The same release fixes <code>WebFetch(domain:*.example.com)</code> wildcard rules never matching subdomains, and stuck 1M-context sessions now auto-compact back under the standard limit instead of hanging.",
+          "whyItMatters": "Deeper agent trees let an orchestrator decompose work recursively instead of flattening everything into one fan-out — but each level multiplies token spend, so cap depth deliberately.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.166",
-          "chipLabel": "v2.1.166 · Jun 6",
+          "id": "2.1.169",
+          "chipLabel": "v2.1.169 · Jun 8",
           "chipKind": "feat",
-          "title": "<code>fallbackModel</code> setting · glob deny rules · relayed-message auth hardening",
-          "paragraph": "New <code>fallbackModel</code> setting configures up to three fallback models tried in order when the primary is overloaded or unavailable; <code>--fallback-model</code> now also applies to interactive sessions, and Claude Code retries a turn once on the fallback after an unexpected non-retryable API error. Deny rules accept glob patterns in the tool-name position (<code>\"*\"</code> denies all tools). Messages relayed via <code>SendMessage</code> from other sessions no longer carry user authority — receivers refuse relayed permission requests.",
-          "whyItMatters": "The fallback chain is a real resilience win for long unattended runs that previously died on a single overloaded-model error. The relayed-message change closes a cross-session privilege path worth knowing if you orchestrate multiple sessions.",
-          "example": { "lang": "json", "code": "// settings.json\n{\n  \"fallbackModel\": [\"claude-opus-4-8\", \"claude-sonnet-4-6\", \"claude-haiku-4-5\"]\n}" },
+          "title": "New <code>--safe-mode</code>, <code>/cd</code>, and <code>disableBundledSkills</code>",
+          "paragraph": "<code>--safe-mode</code> (and <code>CLAUDE_CODE_SAFE_MODE</code>) starts Claude Code with every customization — CLAUDE.md, plugins, skills, hooks, MCP servers — disabled for troubleshooting. <code>/cd</code> moves a session to a new working directory without breaking the prompt cache. A <code>disableBundledSkills</code> setting hides built-in skills, workflows, and slash commands from the model, and self-hosted runners gain a <code>post-session</code> lifecycle hook.",
+          "whyItMatters": "<code>--safe-mode</code> is the fastest way to prove whether your own config is causing a bug, and <code>disableBundledSkills</code> trims the model's tool surface in locked-down setups.",
+          "example": { "lang": "bash", "code": "claude --safe-mode   # start with CLAUDE.md, plugins, skills, hooks, MCP all off" },
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        },
+        {
+          "id": "2.1.176",
+          "chipLabel": "v2.1.176 · Jun 12",
+          "chipKind": "break",
+          "title": "<code>availableModels</code> allowlist is now strictly enforced",
+          "paragraph": "Two releases tighten model allowlisting. <code>2.1.175</code> adds the <code>enforceAvailableModels</code> managed setting: when on, the allowlist also constrains the Default model, and user or project settings can no longer widen a managed list. <code>2.1.176</code> stops alias picks from being redirected to a blocked model via <code>ANTHROPIC_DEFAULT_*_MODEL</code>, and <code>/fast</code> now refuses to toggle if it would switch to a model outside the allowlist. The same release also generates session titles in your conversation's language and adds a <code>footerLinksRegexes</code> setting for regex-matched footer link badges.",
+          "whyItMatters": "If your org pins models via <code>availableModels</code>, the env-var and <code>/fast</code> escape hatches are now closed — verify your allowlist still includes every model your team actually needs.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         }
       ]
@@ -55,41 +54,41 @@
       "sourceHomeUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases",
       "entries": [
         {
-          "id": "v0.3.160",
-          "chipLabel": "v0.3.160 · Jun 2",
-          "chipKind": "feat",
-          "title": "Fix: aborting during a PostToolUse hook no longer hangs the process",
-          "paragraph": "Hook callbacks were swallowing abort signals — aborting during a <code>PostToolUse</code> hook left the calling process hanging. It now ends the turn with a final <code>result</code> message.",
-          "whyItMatters": "If you wrap the SDK and cancel turns from hooks, you were at risk of a wedged process. One bump removes it.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.160"
+          "id": "v0.3.170",
+          "chipLabel": "v0.3.170 · Jun 9",
+          "chipKind": "new",
+          "title": "<code>claude-fable-5</code> model and <code>fable</code> alias added to SDK types",
+          "paragraph": "The SDK model types now include <code>claude-fable-5</code> and the <code>fable</code> alias, reaching parity with Claude Code 2.1.170 so you can target Fable 5 from typed SDK code without casting around the type system.",
+          "whyItMatters": "TypeScript consumers can select the new model with full type safety the day it ships.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.170"
         },
         {
-          "id": "v0.3.162",
-          "chipLabel": "v0.3.162 · Jun 3",
-          "chipKind": "break",
-          "title": "Native builds default to embedded <code>find</code>/<code>grep</code> · refusals carry <code>stop_reason: \"refusal\"</code>",
-          "paragraph": "On native builds, Agent SDK sessions now default to fast embedded <code>find</code>/<code>grep</code> in Bash (matching the interactive CLI) instead of always registering the dedicated <code>Grep</code>/<code>Glob</code> tools. To keep the dedicated tools — e.g. to intercept searches via <code>canUseTool</code> or hooks — name them in the <code>tools</code> option or <code>allowedTools</code>. Separately, refusal errors now carry <code>stop_reason: \"refusal\"</code> and <code>stop_details</code> on the assistant message and in transcripts.",
-          "whyItMatters": "If your host inspects or gates Grep/Glob calls, they may simply stop firing until you opt the tools back in. The refusal metadata lets you detect refusals without brittle text-matching.",
-          "example": { "lang": "ts", "code": "// keep dedicated search tools on native builds\nquery({ prompt, options: { allowedTools: ['Grep', 'Glob', /* ... */] } });" },
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.162"
+          "id": "v0.3.174",
+          "chipLabel": "v0.3.174 · Jun 12",
+          "chipKind": "feat",
+          "title": "<code>system/model_fallback</code> now fires for all fallback triggers",
+          "paragraph": "SDK consumers now receive the <code>system/model_fallback</code> message for every fallback trigger — <code>overloaded</code>, <code>server_error</code>, and <code>last_resort</code> in addition to the existing <code>model_not_found</code> and <code>permission_denied</code>. The message's <code>trigger</code> field gained the two new values.",
+          "whyItMatters": "You can now observe and react to every reason a model was swapped under you — useful for logging degraded runs or surfacing them to users.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.174"
         },
         {
-          "id": "v0.3.163",
-          "chipLabel": "v0.3.163 · Jun 4",
+          "id": "v0.3.176",
+          "chipLabel": "v0.3.176 · Jun 12",
           "chipKind": "feat",
-          "title": "<code>stop_task</code> idempotent for gone tasks · add builtin MCP servers via <code>setMcpServers</code> · hook <code>additionalContext</code>",
-          "paragraph": "<code>stop_task</code> control requests now return success when the target task is already <code>not_found</code>/<code>not_running</code>, so clients can prune stale task chips reliably. SDK hosts can add builtin MCP servers (e.g. <code>claude-in-chrome</code>) via <code>setMcpServers</code> even when the CLI launched without them. Stop and SubagentStop hooks support <code>additionalContext</code> in <code>hookSpecificOutput</code>.",
-          "whyItMatters": "The <code>stop_task</code> fix removes a race when tearing down fanned-out work; the <code>setMcpServers</code> fix lets you wire in builtin servers at runtime instead of only at launch.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.163"
+          "title": "Fixed dropped turn results and lost agent state on SDK resume",
+          "paragraph": "Two resume and concurrency fixes: turn <code>result</code> messages were being dropped when multiple turns completed while a background agent or workflow was running, and background-agent, remote-agent, and MCP task state was not restored when resuming a session via the SDK.",
+          "whyItMatters": "If you build long-running or resumable agents on the SDK, completions and in-flight task state now survive resume instead of being silently lost.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.176"
         },
         {
-          "id": "v0.3.166",
-          "chipLabel": "v0.3.166 · Jun 6",
+          "id": "v0.3.172",
+          "chipLabel": "v0.3.172 · Jun 10",
           "chipKind": "feat",
-          "title": "Fix: MCP resource tools now inject for servers added at runtime",
-          "paragraph": "Fixed MCP resource tools not being injected for servers added at runtime via the <code>mcp_set_servers</code> control request.",
-          "whyItMatters": "If you add MCP servers after session start and rely on their resource tools, they were silently missing until this release.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.166"
+          "title": "Per-plugin <code>skipMcpDiscovery</code> option",
+          "paragraph": "The SDK <code>plugins</code> option now accepts <code>skipMcpDiscovery: true</code> per plugin, so a host that manages a plugin's MCP connections itself can load that plugin's skills and hooks without the engine re-reading its <code>.mcp.json</code>. Also fixed slash-then-whitespace input (e.g. <code>/ add tests</code>) being silently dropped instead of treated as a plain prompt.",
+          "whyItMatters": "Hosts that own their MCP wiring can adopt plugins for skills and hooks without double-connecting MCP servers.",
+          "example": { "lang": "ts", "code": "query({\n  options: {\n    plugins: [{ path: \"./my-plugin\", skipMcpDiscovery: true }],\n  },\n});" },
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.172"
         }
       ]
     },
@@ -100,59 +99,22 @@
       "sourceHomeUrl": "https://github.com/openai/codex/releases",
       "entries": [
         {
-          "id": "rust-v0.136.0",
-          "chipLabel": "v0.136.0 · Jun 1",
+          "id": "rust-v0.139.0",
+          "chipLabel": "v0.139.0 · Jun 9",
           "chipKind": "feat",
-          "title": "Session archiving (<code>/archive</code>, <code>codex archive</code>) · clickable TUI markdown links · ChatGPT auth refresh hardening",
-          "paragraph": "Sessions can be archived from the TUI with <code>/archive</code> or the CLI with <code>codex archive</code> / <code>codex unarchive</code>; archived sessions are protected from resume/fork until restored. TUI markdown keeps web links clickable via OSC 8, and cramped tables fall back to readable key/value records. ChatGPT auth now refreshes tokens before the five-minute expiry window and shows a relogin path for reused refresh tokens instead of a generic cloud error. App-server integrations can resume a thread with its initial turns page and launch stdio mode with <code>codex app-server --stdio</code>.",
-          "whyItMatters": "Archiving lets you retire noisy sessions without deleting them. The auth-refresh change cuts spurious \"cloud error\" failures from expired ChatGPT tokens.",
-          "example": { "lang": "shell", "code": "codex archive    # retire a session (protected from resume/fork)\ncodex unarchive  # bring it back" },
-          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.136.0"
+          "title": "Web search in code mode · richer MCP tool schemas (<code>oneOf</code>/<code>allOf</code>)",
+          "paragraph": "Code mode can now call standalone web search directly, including from nested JavaScript tool calls, returning plaintext results. Tool and connector input schemas now preserve <code>oneOf</code> and <code>allOf</code>, and large schemas keep more shallow structure when compacted — improving compatibility with richer MCP tools. <code>codex doctor</code> also reports editor and pager environment details (redacted in JSON output).",
+          "whyItMatters": "If you expose MCP tools with union or intersection input schemas to Codex, they now round-trip correctly instead of being flattened away.",
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.139.0"
         },
         {
-          "id": "rust-v0.137.0",
-          "chipLabel": "v0.137.0 · Jun 4",
+          "id": "rust-v0.138.0",
+          "chipLabel": "v0.138.0 · Jun 8",
           "chipKind": "feat",
-          "title": "<code>codex plugin list --json</code> · parallel hosted web searches · enterprise credit limits & cloud-managed config",
-          "paragraph": "<code>codex plugin list --json</code> emits a machine-readable plugin inventory, and remote catalog suggestions are now cached. Standalone hosted web searches can run in parallel, and hosted web/image tools are available in more code-mode flows. Enterprise/admin flows show monthly credit limits and can apply cloud-managed config bundles (including EDU workspaces). Remote-control clients can start pairing and list or revoke controller grants via app-server v2 RPCs. TUI adds F13–F24 keybindings and paste in searchable menus.",
-          "whyItMatters": "<code>plugin list --json</code> is the hook for scripting plugin audits in CI. Cloud-managed config bundles let admins push a baseline config to a fleet instead of templating it by hand.",
-          "example": { "lang": "shell", "code": "codex plugin list --json | jq '.[].name'   # script a plugin inventory" },
-          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.137.0"
-        }
-      ]
-    },
-    {
-      "id": "openai-sdk",
-      "label": "OpenAI Node SDK",
-      "emoji": "🧬",
-      "sourceHomeUrl": "https://github.com/openai/openai-node/releases",
-      "entries": [
-        {
-          "id": "v6.40.0",
-          "chipLabel": "v6.40.0 · Jun 1",
-          "chipKind": "break",
-          "title": "Workload identity in audit logs · <code>additional_tools</code> in responses · <code>migrate</code> CLI removed",
-          "paragraph": "Adds workload identity to audit logs and an <code>additional_tools</code> item in responses, and makes <code>ActionSearch.query</code> optional. The bundled <code>migrate</code> CLI was removed.",
-          "whyItMatters": "If any tooling still shells out to the SDK's <code>migrate</code> CLI, it is gone in 6.40.0 — drop the call before you bump.",
-          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.40.0"
-        },
-        {
-          "id": "v6.41.0",
-          "chipLabel": "v6.41.0 · Jun 1",
-          "chipKind": "feat",
-          "title": "Amazon Bedrock Responses support",
-          "paragraph": "Adds Amazon Bedrock support for the Responses API.",
-          "whyItMatters": "If you run the OpenAI Node SDK against Bedrock, the Responses API is now available there.",
-          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.41.0"
-        },
-        {
-          "id": "v6.42.0",
-          "chipLabel": "v6.42.0 · Jun 3",
-          "chipKind": "feat",
-          "title": "Moderation on <code>responses</code> and <code>chat.completions</code>",
-          "paragraph": "Adds <code>responses.moderation</code> and <code>chat_completions.moderation</code> to the API surface.",
-          "whyItMatters": "You can run moderation inline against the Responses and Chat Completions flows without a separate client path.",
-          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.42.0"
+          "title": "<code>/app</code> handoff to Codex Desktop · image file paths exposed to the model",
+          "paragraph": "The <code>/app</code> command hands the current CLI thread into Codex Desktop on macOS and native Windows. Local image attachments and generated images now expose their saved file paths to the model, making follow-up edits and file references more reliable. App-server integrations can read account token usage, and auth now supports v2 personal access tokens.",
+          "whyItMatters": "Exposing image file paths means multi-step image edits land on the intended file instead of the model guessing from conversation history.",
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.138.0"
         }
       ]
     }
@@ -160,53 +122,51 @@
   "suggestions": [
     {
       "num": 1,
-      "title": "Re-check WebFetch permission rules after the 2.1.162 precedence change",
-      "chipLabel": "Breaking risk",
+      "title": "Audit your model allowlist before upgrading",
+      "chipLabel": "v2.1.176 · Jun 12",
       "chipKind": "break",
-      "paragraph": "As of Claude Code 2.1.162, explicit <code>WebFetch(domain:...)</code> deny/ask/allow rules take precedence over the built-in preapproved-host auto-allow. If your config mixes an explicit WebFetch rule with reliance on the preapproved-domain allowlist, the explicit rule now wins and may block or prompt for hosts that previously sailed through.",
-      "whyItMatters": "Permission changes are silent until a fetch you expected to work starts asking — or one you meant to block stops being blocked. Audit before it surprises a run.",
-      "example": { "lang": "bash", "code": "rg -F 'WebFetch(' .claude/settings.json .claude/settings.local.json\n# reconcile explicit rules with the hosts you relied on auto-allowing" },
-      "tiesTo": "claude-code · v2.1.162 — WebFetch rules override preapproved domains"
+      "paragraph": "If your team pins models with a managed <code>availableModels</code> list, the env-var and <code>/fast</code> escape hatches are now closed. Before rolling out 2.1.175+, confirm the allowlist contains every model your developers actually use, including whatever the Default resolves to.",
+      "whyItMatters": "A too-narrow allowlist will now hard-block developers instead of silently falling back to an allowed model.",
+      "example": { "lang": "json", "code": "// managed-settings.json\n{\n  \"enforceAvailableModels\": true,\n  \"availableModels\": [\"claude-opus-4-8\", \"claude-sonnet-4-6\"]\n}" },
+      "tiesTo": "claude-code · v2.1.176 · Jun 12 — availableModels enforcement"
     },
     {
       "num": 2,
-      "title": "Opt Grep/Glob back in if your Agent SDK host intercepts searches",
-      "chipLabel": "Breaking risk",
-      "chipKind": "break",
-      "paragraph": "Agent SDK v0.3.162 makes native builds default to embedded <code>find</code>/<code>grep</code> in Bash instead of registering the dedicated <code>Grep</code>/<code>Glob</code> tools. If you gate or observe searches via <code>canUseTool</code> or hooks, those interceptors stop firing until you name the tools explicitly.",
-      "whyItMatters": "Your search guardrails can go dark with no error — the searches just route through Bash instead. Naming the tools restores the hook surface.",
-      "example": { "lang": "ts", "code": "query({\n  prompt,\n  options: { allowedTools: ['Grep', 'Glob', /* your other tools */] },\n});" },
-      "tiesTo": "Claude Agent SDK · v0.3.162 — native builds default to embedded find/grep"
+      "title": "Cap nesting depth and token budget in recursive agent trees",
+      "chipLabel": "v2.1.172 · Jun 10",
+      "chipKind": "tip",
+      "paragraph": "With sub-agents now able to spawn sub-agents up to 5 deep, a recursive orchestrator can blow past your token budget fast. If your service drives Claude Code agents, set an explicit budget and prefer pipelining over deep nesting unless a task genuinely needs it.",
+      "whyItMatters": "Each nesting level multiplies fan-out; an unbounded tree is the easiest way to 10x a run's cost.",
+      "tiesTo": "claude-code · v2.1.172 · Jun 10 — nested sub-agents"
     },
     {
       "num": 3,
-      "title": "Configure a <code>fallbackModel</code> chain for unattended runs",
-      "chipLabel": "Reliability",
-      "chipKind": "safe",
-      "paragraph": "Claude Code 2.1.166 adds a <code>fallbackModel</code> setting that tries up to three models in order when the primary is overloaded or unavailable, and retries a turn once on the fallback after an unexpected non-retryable API error. Set it anywhere you run long or unattended sessions.",
-      "whyItMatters": "A single overloaded-model error used to kill an overnight or CI run; a fallback chain turns that into a transparent retry.",
-      "example": { "lang": "json", "code": "// settings.json\n{\n  \"fallbackModel\": [\"claude-opus-4-8\", \"claude-sonnet-4-6\", \"claude-haiku-4-5\"]\n}" },
-      "tiesTo": "claude-code · v2.1.166 — fallbackModel setting"
+      "title": "Log every model fallback in SDK-based agents",
+      "chipLabel": "v0.3.174 · Jun 12",
+      "chipKind": "tip",
+      "paragraph": "If your Node or TypeScript service embeds the Agent SDK, subscribe to <code>system/model_fallback</code> and record the <code>trigger</code> (now including <code>overloaded</code>, <code>server_error</code>, and <code>last_resort</code>). Surface degraded runs in your own metrics rather than letting silent model swaps skew your results.",
+      "whyItMatters": "Knowing when and why you were downgraded is the difference between a debuggable incident and a mystery quality dip.",
+      "example": { "lang": "ts", "code": "for await (const msg of query({ prompt })) {\n  if (msg.type === \"system\" && msg.subtype === \"model_fallback\") {\n    metrics.increment(\"llm.fallback\", { trigger: msg.trigger });\n  }\n}" },
+      "tiesTo": "Claude Agent SDK · v0.3.174 · Jun 12 — model_fallback message"
     },
     {
       "num": 4,
-      "title": "Pin an approved Claude Code version range in managed settings",
-      "chipLabel": "Tip",
+      "title": "Reach for <code>--safe-mode</code> first when a session misbehaves",
+      "chipLabel": "v2.1.169 · Jun 8",
       "chipKind": "tip",
-      "paragraph": "Claude Code 2.1.163 adds <code>requiredMinimumVersion</code> and <code>requiredMaximumVersion</code> managed settings — the CLI refuses to start outside the range and points users to an approved version. Use it to keep a team or CI fleet on a reproducible baseline.",
-      "whyItMatters": "Version drift across a team is a quiet source of flaky behavior; a pinned range removes it without policing installs by hand.",
-      "example": { "lang": "json", "code": "// managed-settings.json\n{\n  \"requiredMinimumVersion\": \"2.1.163\",\n  \"requiredMaximumVersion\": \"2.1.168\"\n}" },
-      "tiesTo": "claude-code · v2.1.163 — requiredMinimumVersion / requiredMaximumVersion"
+      "paragraph": "When Claude Code behaves oddly, restart with <code>--safe-mode</code> to disable all customizations (CLAUDE.md, plugins, skills, hooks, MCP). If the problem disappears, the cause is your config — re-enable pieces until it returns.",
+      "whyItMatters": "Bisecting config with a single flag is far faster than guessing which hook or MCP server broke.",
+      "example": { "lang": "bash", "code": "claude --safe-mode" },
+      "tiesTo": "claude-code · v2.1.169 · Jun 8 — safe-mode"
     },
     {
       "num": 5,
-      "title": "Detect model refusals via <code>stop_reason</code> instead of matching text",
-      "chipLabel": "Tip",
+      "title": "Keep MCP tool input schemas expressive but shallow",
+      "chipLabel": "v0.139.0 · Jun 9",
       "chipKind": "tip",
-      "paragraph": "Agent SDK v0.3.162 surfaces refusals with <code>stop_reason: \"refusal\"</code> and <code>stop_details</code> on the assistant message and in transcripts. If you currently sniff refusals by string-matching the error content, switch to the structured field.",
-      "whyItMatters": "Text-matching refusal copy breaks every time the wording changes; a stable <code>stop_reason</code> check does not.",
-      "example": { "lang": "ts", "code": "if (msg.stop_reason === 'refusal') {\n  // handle refusal using msg.stop_details\n}" },
-      "tiesTo": "Claude Agent SDK · v0.3.162 — refusals carry stop_reason"
+      "paragraph": "Codex 0.139 now preserves <code>oneOf</code>/<code>allOf</code> in tool and connector schemas. If you author MCP servers, you can use union and intersection types for tool inputs and expect richer clients to honor them — but keep the schemas shallow so schema compaction on large tool sets stays lossless.",
+      "whyItMatters": "Expressive-but-shallow schemas give the model a precise input contract without being truncated when a client compacts many tools.",
+      "tiesTo": "Codex · v0.139.0 · Jun 9 — oneOf/allOf in tool schemas"
     }
   ]
 }
