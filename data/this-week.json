@@ -1,6 +1,6 @@
 {
-  "weekOf": "2026-06-15",
-  "totalNewItems": 10,
+  "weekOf": "2026-06-22",
+  "totalNewItems": 11,
   "sections": [
     {
       "id": "claude-code",
@@ -9,40 +9,47 @@
       "sourceHomeUrl": "https://code.claude.com/docs/en/changelog",
       "entries": [
         {
-          "id": "2.1.170",
-          "chipLabel": "v2.1.170 · Jun 9",
-          "chipKind": "new",
-          "title": "Claude Fable 5 — new Mythos-class model",
-          "paragraph": "Claude Code 2.1.170 adds access to <code>Claude Fable 5</code>, a Mythos-class model Anthropic describes as exceeding any model they had previously made generally available. Update to 2.1.170+ to select it.",
-          "whyItMatters": "A new top-tier model is now selectable for your hardest agentic tasks — worth benchmarking against Opus on your real workloads before committing.",
+          "id": "2.1.183",
+          "chipLabel": "2.1.183 · Jun 19",
+          "chipKind": "safe",
+          "title": "Auto mode blocks destructive commands by default",
+          "paragraph": "Auto mode now refuses <code>git reset --hard</code>, <code>git push --force</code>, and <code>terraform</code> / <code>pulumi</code> / <code>cdk destroy</code> unless those exact commands appear in the user's prompt. The release also adds deprecation warnings for retiring models, a <code>/config --help</code> command that lists every tunable setting, and fixes for thinking blocks, WebSearch, and cursor positioning.",
+          "whyItMatters": "Autonomous agents running in CI or staging can no longer accidentally wipe branches or tear down infrastructure.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.172",
-          "chipLabel": "v2.1.172 · Jun 10",
+          "id": "2.1.181",
+          "chipLabel": "2.1.181 · Jun 17",
           "chipKind": "feat",
-          "title": "Sub-agents can spawn their own sub-agents (up to 5 levels deep)",
-          "paragraph": "Sub-agents may now dispatch their own sub-agents, nesting up to 5 levels. The same release fixes <code>WebFetch(domain:*.example.com)</code> wildcard rules never matching subdomains, and stuck 1M-context sessions now auto-compact back under the standard limit instead of hanging.",
-          "whyItMatters": "Deeper agent trees let an orchestrator decompose work recursively instead of flattening everything into one fan-out — but each level multiplies token spend, so cap depth deliberately.",
+          "title": "Direct config edits with /config key=value",
+          "paragraph": "A new <code>/config key=value</code> shorthand lets you change any setting inline without navigating menus. The release also adds a <code>sandbox.allowAppleEvents</code> option for macOS automation, a <code>CLAUDE_CLIENT_PRESENCE_FILE</code> env var for detecting running instances, and improved streaming of long paragraphs with auto-retry for mid-thinking connection drops.",
+          "whyItMatters": "Team setup scripts can now configure Claude Code non-interactively by piping config commands, making developer onboarding scriptable.",
+          "example": {
+            "lang": "bash",
+            "code": "# Set config inline — no menu navigation needed\n/config model=claude-sonnet-4-6\n/config autoApprove=true"
+          },
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.169",
-          "chipLabel": "v2.1.169 · Jun 8",
+          "id": "2.1.178",
+          "chipLabel": "2.1.178 · Jun 15",
           "chipKind": "feat",
-          "title": "New <code>--safe-mode</code>, <code>/cd</code>, and <code>disableBundledSkills</code>",
-          "paragraph": "<code>--safe-mode</code> (and <code>CLAUDE_CODE_SAFE_MODE</code>) starts Claude Code with every customization — CLAUDE.md, plugins, skills, hooks, MCP servers — disabled for troubleshooting. <code>/cd</code> moves a session to a new working directory without breaking the prompt cache. A <code>disableBundledSkills</code> setting hides built-in skills, workflows, and slash commands from the model, and self-hosted runners gain a <code>post-session</code> lifecycle hook.",
-          "whyItMatters": "<code>--safe-mode</code> is the fastest way to prove whether your own config is causing a bug, and <code>disableBundledSkills</code> trims the model's tool surface in locked-down setups.",
-          "example": { "lang": "bash", "code": "claude --safe-mode   # start with CLAUDE.md, plugins, skills, hooks, MCP all off" },
+          "title": "Agent teams simplified; Tool(param:value) permission rules",
+          "paragraph": "TeamCreate/TeamDelete tools were removed — agents are now spawned directly with implicit teams, reducing boilerplate in multi-agent workflows. Permission rules gain a <code>Tool(param:value)</code> filter syntax so you can allow a tool only when it is called with a specific argument, and nested <code>.claude/</code> directory handling is improved.",
+          "whyItMatters": "Multi-agent orchestration code gets simpler, and fine-grained permission policies become expressible without custom hooks.",
+          "example": {
+            "lang": "json",
+            "code": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(git status:*)\",\n      \"Bash(git diff:*)\",\n      \"Read\"\n    ]\n  }\n}"
+          },
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.176",
-          "chipLabel": "v2.1.176 · Jun 12",
-          "chipKind": "break",
-          "title": "<code>availableModels</code> allowlist is now strictly enforced",
-          "paragraph": "Two releases tighten model allowlisting. <code>2.1.175</code> adds the <code>enforceAvailableModels</code> managed setting: when on, the allowlist also constrains the Default model, and user or project settings can no longer widen a managed list. <code>2.1.176</code> stops alias picks from being redirected to a blocked model via <code>ANTHROPIC_DEFAULT_*_MODEL</code>, and <code>/fast</code> now refuses to toggle if it would switch to a model outside the allowlist. The same release also generates session titles in your conversation's language and adds a <code>footerLinksRegexes</code> setting for regex-matched footer link badges.",
-          "whyItMatters": "If your org pins models via <code>availableModels</code>, the env-var and <code>/fast</code> escape hatches are now closed — verify your allowlist still includes every model your team actually needs.",
+          "id": "2.1.179",
+          "chipLabel": "2.1.179 · Jun 16",
+          "chipKind": "fix",
+          "title": "Mid-stream connection drops now preserve partial responses",
+          "paragraph": "When a network interruption cuts a streaming response mid-flight, Claude Code now saves the partial result instead of discarding it. Mouse-wheel scrolling in WSL2 was also fixed, and long-conversation performance improved through better plugin loading.",
+          "whyItMatters": "Long autonomous runs that hit transient network blips no longer have to restart from scratch.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         }
       ]
@@ -54,41 +61,44 @@
       "sourceHomeUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases",
       "entries": [
         {
-          "id": "v0.3.170",
-          "chipLabel": "v0.3.170 · Jun 9",
+          "id": "v0.3.181",
+          "chipLabel": "v0.3.181 · Jun 17",
           "chipKind": "new",
-          "title": "<code>claude-fable-5</code> model and <code>fable</code> alias added to SDK types",
-          "paragraph": "The SDK model types now include <code>claude-fable-5</code> and the <code>fable</code> alias, reaching parity with Claude Code 2.1.170 so you can target Fable 5 from typed SDK code without casting around the type system.",
-          "whyItMatters": "TypeScript consumers can select the new model with full type safety the day it ships.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.170"
+          "title": "Detect credits-required rate limits via SDKRateLimitInfo",
+          "paragraph": "Three new fields land on <code>SDKRateLimitInfo</code>: <code>errorCode</code>, <code>canUserPurchaseCredits</code>, and <code>hasChargeableSavedPaymentMethod</code>. Together they let your SDK consumer distinguish a credits-exhausted limit from a rate-throttle and surface an appropriate billing prompt. Tool calls now also carry an <code>icon_url</code> in <code>tool_use_meta</code>, sourced from MCP server directory metadata. A bug where Remote Control sessions dropped <code>file_attachments</code> from inbound messages was also fixed.",
+          "whyItMatters": "Agents can now surface actionable billing guidance instead of swallowing a generic 429 error.",
+          "example": {
+            "lang": "typescript",
+            "code": "if (event.type === 'rate_limit') {\n  const { canUserPurchaseCredits, errorCode } = event.info;\n  if (canUserPurchaseCredits) {\n    showBillingPrompt(errorCode);\n  } else {\n    scheduleRetry();\n  }\n}"
+          },
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.181"
         },
         {
-          "id": "v0.3.174",
-          "chipLabel": "v0.3.174 · Jun 12",
-          "chipKind": "feat",
-          "title": "<code>system/model_fallback</code> now fires for all fallback triggers",
-          "paragraph": "SDK consumers now receive the <code>system/model_fallback</code> message for every fallback trigger — <code>overloaded</code>, <code>server_error</code>, and <code>last_resort</code> in addition to the existing <code>model_not_found</code> and <code>permission_denied</code>. The message's <code>trigger</code> field gained the two new values.",
-          "whyItMatters": "You can now observe and react to every reason a model was swapped under you — useful for logging degraded runs or surfacing them to users.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.174"
+          "id": "v0.3.179",
+          "chipLabel": "v0.3.179 · Jun 16",
+          "chipKind": "new",
+          "title": "Human-readable tool labels via tool_use_meta sidecar",
+          "paragraph": "Assistant messages now include an optional <code>tool_use_meta</code> object alongside each tool call with a <code>displayName</code> field. SDK consumers can render friendly labels (e.g. <code>'Search the web'</code>) instead of the raw wire name (e.g. <code>mcp__brave__search</code>). Also fixed: <code>-p</code> mode no longer exits before a completed background agent's notification is delivered.",
+          "whyItMatters": "UI integrations built on the SDK get polished tool display names without maintaining their own name-mapping tables.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.179"
         },
         {
-          "id": "v0.3.176",
-          "chipLabel": "v0.3.176 · Jun 12",
+          "id": "v0.3.178",
+          "chipLabel": "v0.3.178 · Jun 15",
           "chipKind": "feat",
-          "title": "Fixed dropped turn results and lost agent state on SDK resume",
-          "paragraph": "Two resume and concurrency fixes: turn <code>result</code> messages were being dropped when multiple turns completed while a background agent or workflow was running, and background-agent, remote-agent, and MCP task state was not restored when resuming a session via the SDK.",
-          "whyItMatters": "If you build long-running or resumable agents on the SDK, completions and in-flight task state now survive resume instead of being silently lost.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.176"
+          "title": "Typed permission-denial reasons for programmatic matching",
+          "paragraph": "Permission-denied advisory messages now carry a <code>reason</code> field typed as <code>'safetyCheck' | 'asyncAgent'</code>, letting SDK consumers branch on why a tool was blocked rather than parsing free-text strings. Spawn failures on a native binary now also explain a likely musl/glibc libc mismatch and suggest <code>options.pathToClaudeCodeExecutable</code> as the fix.",
+          "whyItMatters": "Orchestrators can distinguish safety blocks from async-agent blocks and handle each appropriately without fragile string-parsing.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.178"
         },
         {
-          "id": "v0.3.172",
-          "chipLabel": "v0.3.172 · Jun 10",
+          "id": "v0.3.183",
+          "chipLabel": "v0.3.183 · Jun 19",
           "chipKind": "feat",
-          "title": "Per-plugin <code>skipMcpDiscovery</code> option",
-          "paragraph": "The SDK <code>plugins</code> option now accepts <code>skipMcpDiscovery: true</code> per plugin, so a host that manages a plugin's MCP connections itself can load that plugin's skills and hooks without the engine re-reading its <code>.mcp.json</code>. Also fixed slash-then-whitespace input (e.g. <code>/ add tests</code>) being silently dropped instead of treated as a plain prompt.",
-          "whyItMatters": "Hosts that own their MCP wiring can adopt plugins for skills and hooks without double-connecting MCP servers.",
-          "example": { "lang": "ts", "code": "query({\n  options: {\n    plugins: [{ path: \"./my-plugin\", skipMcpDiscovery: true }],\n  },\n});" },
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.172"
+          "title": "SDK parity with Claude Code 2.1.183",
+          "paragraph": "This release tracks Claude Code 2.1.183, bringing the SDK to parity with the auto-mode safety guardrails — including blocking of destructive git and infrastructure commands — shipped in that version.",
+          "whyItMatters": "Applications embedding the SDK via the native binary get destructive-command blocking at no integration cost.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.183"
         }
       ]
     },
@@ -99,22 +109,39 @@
       "sourceHomeUrl": "https://github.com/openai/codex/releases",
       "entries": [
         {
-          "id": "rust-v0.139.0",
-          "chipLabel": "v0.139.0 · Jun 9",
+          "id": "rust-v0.141.0",
+          "chipLabel": "0.141.0 · Jun 18",
+          "chipKind": "new",
+          "title": "Authenticated E2E encrypted Noise relay for remote executors",
+          "paragraph": "Remote executors now communicate over authenticated Noise-protocol channels, providing end-to-end encryption for all agent traffic without requiring a VPN. Cross-platform remote execution also now correctly preserves executor-native working directories, shells, and filesystem permission paths across app-server and exec-server boundaries.",
+          "whyItMatters": "Teams running Codex against remote dev environments get encrypted channels without configuring a VPN or SSH tunnel.",
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.141.0"
+        }
+      ]
+    },
+    {
+      "id": "openai-sdk",
+      "label": "OpenAI Node SDK",
+      "emoji": "🧬",
+      "sourceHomeUrl": "https://github.com/openai/openai-node/releases",
+      "entries": [
+        {
+          "id": "v6.44.0",
+          "chipLabel": "v6.44.0 · Jun 17",
           "chipKind": "feat",
-          "title": "Web search in code mode · richer MCP tool schemas (<code>oneOf</code>/<code>allOf</code>)",
-          "paragraph": "Code mode can now call standalone web search directly, including from nested JavaScript tool calls, returning plaintext results. Tool and connector input schemas now preserve <code>oneOf</code> and <code>allOf</code>, and large schemas keep more shallow structure when compacted — improving compatibility with richer MCP tools. <code>codex doctor</code> also reports editor and pager environment details (redacted in JSON output).",
-          "whyItMatters": "If you expose MCP tools with union or intersection input schemas to Codex, they now round-trip correctly instead of being flattened away.",
-          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.139.0"
+          "title": "OpenAPI spec sync",
+          "paragraph": "This release syncs the Node.js SDK with the latest OpenAPI spec, incorporating new endpoint shapes and parameter changes from the upstream specification update.",
+          "whyItMatters": "Projects targeting the latest API surface can upgrade immediately without waiting for manual wrapper additions.",
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.44.0"
         },
         {
-          "id": "rust-v0.138.0",
-          "chipLabel": "v0.138.0 · Jun 8",
-          "chipKind": "feat",
-          "title": "<code>/app</code> handoff to Codex Desktop · image file paths exposed to the model",
-          "paragraph": "The <code>/app</code> command hands the current CLI thread into Codex Desktop on macOS and native Windows. Local image attachments and generated images now expose their saved file paths to the model, making follow-up edits and file references more reliable. App-server integrations can read account token usage, and auth now supports v2 personal access tokens.",
-          "whyItMatters": "Exposing image file paths means multi-step image edits land on the intended file instead of the model guessing from conversation history.",
-          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.138.0"
+          "id": "v6.43.0",
+          "chipLabel": "v6.43.0 · Jun 16",
+          "chipKind": "fix",
+          "title": "TypeScript main field and pnpm config fixes",
+          "paragraph": "Corrects the <code>main</code> field resolution in the TypeScript package, fixing import errors in bundlers that rely on strict module resolution. Also restores the pnpm monorepo configuration for the <code>next</code> distribution tag.",
+          "whyItMatters": "TypeScript projects using strict module resolution or pnpm workspaces should upgrade to avoid import path breakage.",
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.43.0"
         }
       ]
     }
@@ -122,51 +149,60 @@
   "suggestions": [
     {
       "num": 1,
-      "title": "Audit your model allowlist before upgrading",
-      "chipLabel": "v2.1.176 · Jun 12",
-      "chipKind": "break",
-      "paragraph": "If your team pins models with a managed <code>availableModels</code> list, the env-var and <code>/fast</code> escape hatches are now closed. Before rolling out 2.1.175+, confirm the allowlist contains every model your developers actually use, including whatever the Default resolves to.",
-      "whyItMatters": "A too-narrow allowlist will now hard-block developers instead of silently falling back to an allowed model.",
-      "example": { "lang": "json", "code": "// managed-settings.json\n{\n  \"enforceAvailableModels\": true,\n  \"availableModels\": [\"claude-opus-4-8\", \"claude-sonnet-4-6\"]\n}" },
-      "tiesTo": "claude-code · v2.1.176 · Jun 12 — availableModels enforcement"
+      "title": "Audit your CI agent's allowlist for newly blocked destructive patterns",
+      "chipLabel": "safety",
+      "chipKind": "safe",
+      "paragraph": "Claude Code 2.1.183 blocks <code>git reset --hard</code>, <code>git push --force</code>, and <code>*destroy</code> IaC commands in auto mode unless the prompt explicitly includes them. If your CI pipeline relies on any of these, add them to the <code>permissions.allow</code> list in <code>.claude/settings.json</code> or scope them to a dedicated agent that always receives the explicit instruction.",
+      "whyItMatters": "Agents that ran freely before may now stall on a blocked action mid-pipeline; a proactive allowlist review avoids silent CI hangs.",
+      "example": {
+        "lang": "json",
+        "code": "// .claude/settings.json\n{\n  \"permissions\": {\n    \"allow\": [\"Bash(git push:*)\"]\n  }\n}"
+      },
+      "tiesTo": "claude-code · 2.1.183 · Jun 19 — Auto mode blocks destructive commands by default"
     },
     {
       "num": 2,
-      "title": "Cap nesting depth and token budget in recursive agent trees",
-      "chipLabel": "v2.1.172 · Jun 10",
-      "chipKind": "tip",
-      "paragraph": "With sub-agents now able to spawn sub-agents up to 5 deep, a recursive orchestrator can blow past your token budget fast. If your service drives Claude Code agents, set an explicit budget and prefer pipelining over deep nesting unless a task genuinely needs it.",
-      "whyItMatters": "Each nesting level multiplies fan-out; an unbounded tree is the easiest way to 10x a run's cost.",
-      "tiesTo": "claude-code · v2.1.172 · Jun 10 — nested sub-agents"
+      "title": "Branch on SDKRateLimitInfo.canUserPurchaseCredits for targeted billing prompts",
+      "chipLabel": "rate limits",
+      "chipKind": "feat",
+      "paragraph": "If your service calls the Claude Agent SDK on behalf of end-users, check <code>event.info.canUserPurchaseCredits</code> on a rate-limit event. When true, route the user to a billing page using the typed <code>errorCode</code>. When false, schedule a silent retry — no user action needed.",
+      "whyItMatters": "Generic 429 errors confuse users; typed signals let you show the right call-to-action on the first try.",
+      "example": {
+        "lang": "typescript",
+        "code": "sdk.on('rate_limit', (event) => {\n  if (event.info.canUserPurchaseCredits) {\n    router.push(`/billing?reason=${event.info.errorCode}`);\n  } else {\n    queue.scheduleRetry(event.requestId, 60_000);\n  }\n});"
+      },
+      "tiesTo": "Claude Agent SDK · v0.3.181 · Jun 17 — Detect credits-required rate limits via SDKRateLimitInfo"
     },
     {
       "num": 3,
-      "title": "Log every model fallback in SDK-based agents",
-      "chipLabel": "v0.3.174 · Jun 12",
+      "title": "Use tool_use_meta.displayName to render friendly tool labels in activity feeds",
+      "chipLabel": "UX",
       "chipKind": "tip",
-      "paragraph": "If your Node or TypeScript service embeds the Agent SDK, subscribe to <code>system/model_fallback</code> and record the <code>trigger</code> (now including <code>overloaded</code>, <code>server_error</code>, and <code>last_resort</code>). Surface degraded runs in your own metrics rather than letting silent model swaps skew your results.",
-      "whyItMatters": "Knowing when and why you were downgraded is the difference between a debuggable incident and a mystery quality dip.",
-      "example": { "lang": "ts", "code": "for await (const msg of query({ prompt })) {\n  if (msg.type === \"system\" && msg.subtype === \"model_fallback\") {\n    metrics.increment(\"llm.fallback\", { trigger: msg.trigger });\n  }\n}" },
-      "tiesTo": "Claude Agent SDK · v0.3.174 · Jun 12 — model_fallback message"
+      "paragraph": "If your service surfaces an agent activity feed, read <code>assistantMessage.tool_use_meta?.[toolUseId]?.displayName</code> (SDK v0.3.179+) and display that instead of the raw MCP wire name. Fall back to the raw name when the field is absent for backwards compatibility.",
+      "whyItMatters": "Users see 'Search the web' or 'Read file' instead of opaque identifiers like <code>mcp__brave__search</code>.",
+      "example": {
+        "lang": "typescript",
+        "code": "const label =\n  message.tool_use_meta?.[toolUseId]?.displayName\n  ?? rawToolName;\nrenderActivityItem(label);"
+      },
+      "tiesTo": "Claude Agent SDK · v0.3.179 · Jun 16 — Human-readable tool labels via tool_use_meta sidecar"
     },
     {
       "num": 4,
-      "title": "Reach for <code>--safe-mode</code> first when a session misbehaves",
-      "chipLabel": "v2.1.169 · Jun 8",
+      "title": "Script team onboarding config with /config key=value",
+      "chipLabel": "DX",
       "chipKind": "tip",
-      "paragraph": "When Claude Code behaves oddly, restart with <code>--safe-mode</code> to disable all customizations (CLAUDE.md, plugins, skills, hooks, MCP). If the problem disappears, the cause is your config — re-enable pieces until it returns.",
-      "whyItMatters": "Bisecting config with a single flag is far faster than guessing which hook or MCP server broke.",
-      "example": { "lang": "bash", "code": "claude --safe-mode" },
-      "tiesTo": "claude-code · v2.1.169 · Jun 8 — safe-mode"
+      "paragraph": "Use the new <code>/config key=value</code> syntax (Claude Code 2.1.181+) in your team onboarding scripts to set project-level defaults without menu navigation. Combine with a checked-in <code>.claude/settings.json</code> for committed settings, and use the CLI syntax only for developer-local overrides.",
+      "whyItMatters": "Onboarding a new developer goes from 'navigate three menus' to running a single shell script.",
+      "tiesTo": "claude-code · 2.1.181 · Jun 17 — Direct config edits with /config key=value"
     },
     {
       "num": 5,
-      "title": "Keep MCP tool input schemas expressive but shallow",
-      "chipLabel": "v0.139.0 · Jun 9",
-      "chipKind": "tip",
-      "paragraph": "Codex 0.139 now preserves <code>oneOf</code>/<code>allOf</code> in tool and connector schemas. If you author MCP servers, you can use union and intersection types for tool inputs and expect richer clients to honor them — but keep the schemas shallow so schema compaction on large tool sets stays lossless.",
-      "whyItMatters": "Expressive-but-shallow schemas give the model a precise input contract without being truncated when a client compacts many tools.",
-      "tiesTo": "Codex · v0.139.0 · Jun 9 — oneOf/allOf in tool schemas"
+      "title": "Evaluate Codex's Noise relay as a zero-config alternative to SSH tunnels for remote dev",
+      "chipLabel": "infra",
+      "chipKind": "new",
+      "paragraph": "Codex 0.141.0 ships E2E encrypted Noise-protocol relay channels for remote executors. If your service provisions ephemeral remote dev environments for agents, this relay can replace a VPN or SSH tunnel — the encryption is built into the Codex protocol layer, with no configuration required on the executor side.",
+      "whyItMatters": "Eliminating VPN requirements simplifies network topology and reduces the blast radius of credential leaks.",
+      "tiesTo": "Codex · 0.141.0 · Jun 18 — Authenticated E2E encrypted Noise relay for remote executors"
     }
   ]
 }
