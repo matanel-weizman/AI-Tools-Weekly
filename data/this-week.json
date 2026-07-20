@@ -1,6 +1,6 @@
 {
-  "weekOf": "2026-07-06",
-  "totalNewItems": 12,
+  "weekOf": "2026-07-20",
+  "totalNewItems": 13,
   "sections": [
     {
       "id": "claude-code",
@@ -9,47 +9,39 @@
       "sourceHomeUrl": "https://code.claude.com/docs/en/changelog",
       "entries": [
         {
-          "id": "2.1.197",
-          "chipLabel": "2.1.197 · Jun 30",
-          "chipKind": "new",
-          "title": "Claude Sonnet 5 is the new default model (1M context)",
-          "paragraph": "Claude Sonnet 5 becomes the default model in Claude Code, with a native 1M-token context window and promotional pricing of $2/$10 per million tokens through August 31. Update to 2.1.197 or newer to get access; existing model pins still work if you prefer to stay on your current model.",
-          "whyItMatters": "The default model just changed under everyone — a fresh install or an unpinned config now runs Sonnet 5 with a much larger context window, which changes both cost and behavior of automated runs.",
-          "sourceUrl": "https://www.anthropic.com/news/claude-sonnet-5"
-        },
-        {
-          "id": "2.1.200",
-          "chipLabel": "2.1.200 · Jul 3",
-          "chipKind": "break",
-          "title": "Default permission mode renamed to \"Manual\"; AskUserQuestion no longer auto-continues",
-          "paragraph": "The \"default\" permission mode is now labelled \"Manual\" across the CLI, <code>--help</code>, VS Code, and JetBrains — <code>--permission-mode manual</code> and <code>\"defaultMode\": \"manual\"</code> are accepted alongside the old <code>default</code>. Separately, <code>AskUserQuestion</code> dialogs no longer auto-continue by default; you now opt into an idle timeout via <code>/config</code>. A startup crash when <code>disabledMcpServers</code>/<code>enabledMcpServers</code> is a non-array value was also fixed.",
-          "whyItMatters": "Unattended flows that relied on AskUserQuestion silently auto-continuing will now block waiting for input unless you configure an idle timeout.",
-          "example": {
-            "lang": "bash",
-            "code": "# old and new spellings both work\nclaude --permission-mode default ...\nclaude --permission-mode manual  ..."
-          },
+          "id": "2.1.214",
+          "chipLabel": "2.1.214 · Jul 18",
+          "chipKind": "safe",
+          "title": "Permission-check security fixes for Bash and PowerShell",
+          "paragraph": "2.1.214 patches several permission-check bypasses for Bash and PowerShell, hardens handling of very long commands and unsafe <code>help</code>/<code>man</code> invocations, adds a periodic heartbeat for long-running tool calls, and improves OpenTelemetry logging.",
+          "whyItMatters": "If you run Claude Code or the Agent SDK in any automated or shared context, these are permission-bypass fixes — upgrade to 2.1.214 or newer promptly.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.193",
-          "chipLabel": "2.1.193 · Jun 25",
+          "id": "2.1.212",
+          "chipLabel": "2.1.212 · Jul 17",
           "chipKind": "break",
-          "title": "New OTel event logs the model's response text on upgrade",
-          "paragraph": "A <code>claude_code.assistant_response</code> OpenTelemetry log event now carries the model's response text. It is redacted unless <code>OTEL_LOG_ASSISTANT_RESPONSES=1</code>, but when that variable is unset it follows <code>OTEL_LOG_USER_PROMPTS</code> — so any deployment that already logs prompt content will start emitting response content the moment it upgrades. This release also adds <code>autoMode.classifyAllShell</code> to route every shell command through the auto-mode classifier.",
-          "whyItMatters": "If you ship telemetry to a shared backend, upgrading can silently start exporting full model responses — set <code>OTEL_LOG_ASSISTANT_RESPONSES=0</code> before you roll out.",
-          "example": {
-            "lang": "bash",
-            "code": "# keep telemetry to prompts-only after upgrading\nexport OTEL_LOG_ASSISTANT_RESPONSES=0"
-          },
+          "title": "/fork moves to background, /subtask replaces in-session subagents, new session limits",
+          "paragraph": "<code>/fork</code> now copies a conversation into a background session, and the old in-session subagent is replaced by <code>/subtask</code>. Each session is now capped at 200 web searches and 200 subagent spawns.",
+          "whyItMatters": "Scripts or docs that referenced the old in-session subagent flow need updating, and long autonomous runs can now hit the 200-spawn / 200-search ceilings.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         },
         {
-          "id": "2.1.198",
-          "chipLabel": "2.1.198 · Jul 1",
+          "id": "2.1.207",
+          "chipLabel": "2.1.207 · Jul 11",
+          "chipKind": "break",
+          "title": "Auto mode on by default on Bedrock, Vertex, and Foundry",
+          "paragraph": "Auto mode is now enabled by default on Bedrock, Vertex, and Foundry with no opt-in required. The release also fixes prompt-caching regressions on custom base URLs and improves streaming.",
+          "whyItMatters": "Unattended runs against those cloud backends now get auto mode's broader autonomy unless you explicitly set a stricter permission mode.",
+          "sourceUrl": "https://code.claude.com/docs/en/changelog"
+        },
+        {
+          "id": "2.1.206",
+          "chipLabel": "2.1.206 · Jul 9",
           "chipKind": "feat",
-          "title": "Subagents run in the background by default; Chrome GA; auto-PR on finish",
-          "paragraph": "Subagents now run in the background by default, so the main session keeps working and is notified when they finish. Claude in Chrome reached general availability. Background agents launched from <code>claude agents</code> now commit, push, and open a draft PR when they finish code work in a worktree instead of stopping to ask, and the built-in Explore agent now inherits the session's model (capped at opus) rather than running on haiku.",
-          "whyItMatters": "Delegated work parallelises without babysitting, but background agents can now push branches and open PRs on their own — review your worktree and permission setup before running them unattended.",
+          "title": "Auto-allow git push to a configured push remote",
+          "paragraph": "Claude Code can now auto-allow <code>git push</code> to a remote you've configured as the push target, adds directory suggestions to <code>/cd</code>, and fixes MCP server timeout handling and expired-login error messages.",
+          "whyItMatters": "If a scheduled job keeps failing to push, configuring the push remote lets the agent push without a per-call prompt — directly relevant to unattended routines.",
           "sourceUrl": "https://code.claude.com/docs/en/changelog"
         }
       ]
@@ -61,48 +53,40 @@
       "sourceHomeUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases",
       "entries": [
         {
-          "id": "v0.3.199",
-          "chipLabel": "v0.3.199 · Jul 2",
-          "chipKind": "feat",
-          "title": "requestId on permission callbacks, blocked workflow events, masked credential injection",
-          "paragraph": "Permission callbacks now receive a <code>requestId</code> so you can correlate a decision back to the exact request that triggered it. Workflow agent events gain a <code>blocked</code> field, and sandboxed commands now support masked credential injection — secrets are made available to a command without appearing in logs or transcripts.",
-          "whyItMatters": "Correlating permission prompts by <code>requestId</code> removes the guesswork in multi-agent orchestrators, and masked injection lets sandboxed steps use secrets without leaking them.",
-          "example": {
-            "lang": "typescript",
-            "code": "canUseTool: async (tool, input, { requestId }) => {\n  audit.log({ requestId, tool });\n  return { behavior: 'allow', updatedInput: input };\n}"
-          },
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.199"
+          "id": "v0.3.214",
+          "chipLabel": "v0.3.214 · Jul 18",
+          "chipKind": "break",
+          "title": "permissionMode now rejects unrecognized values",
+          "paragraph": "The SDK now rejects unrecognized <code>permissionMode</code> values instead of silently ignoring them, and adds scheduled-trigger markers plus plugin version tracking.",
+          "whyItMatters": "A typo'd or stale permission-mode string in your config that used to be ignored will now throw at startup.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.214"
         },
         {
-          "id": "v0.3.195",
-          "chipLabel": "v0.3.195 · Jun 26",
-          "chipKind": "new",
-          "title": "Query.reinitialize() recovers a session after a transport gap",
-          "paragraph": "A new <code>Query.reinitialize()</code> method re-sends the initialize control request and redelivers any pending permission or dialog prompts after a transport gap. If your SDK host drops and reconnects its channel to the agent, you can now resync state instead of tearing the session down.",
-          "whyItMatters": "Long-lived SDK sessions behind flaky networks or load balancers can recover in place rather than losing an in-flight permission prompt.",
-          "example": {
-            "lang": "typescript",
-            "code": "socket.on('reconnect', async () => {\n  await query.reinitialize();\n});"
-          },
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.195"
+          "id": "v0.3.211",
+          "chipLabel": "v0.3.211 · Jul 15",
+          "chipKind": "feat",
+          "title": "Assistant messages get a timestamp; errors include CLI stderr",
+          "paragraph": "Assistant messages now carry an <code>SDKAssistantMessage.timestamp</code>, and error reporting now includes the CLI's stderr output.",
+          "whyItMatters": "You can timestamp assistant turns for latency metrics and get far more actionable output when a run fails.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.211"
         },
         {
-          "id": "v0.3.198",
-          "chipLabel": "v0.3.198 · Jul 1",
+          "id": "v0.3.210",
+          "chipLabel": "v0.3.210 · Jul 14",
           "chipKind": "feat",
-          "title": "Per-server MCP timeouts and shadowed-callback warnings",
-          "paragraph": "MCP servers can now be given per-server timeout options instead of one global value, and the SDK emits a runtime warning when a callback configuration is shadowed by another. A mapping bug where <code>SDKUserMessage.isSynthetic</code> was not carried through to <code>isMeta</code> on ingestion was also fixed.",
-          "whyItMatters": "A single slow MCP server no longer forces you to loosen the timeout for every server, and the shadowing warning surfaces config mistakes that used to fail silently.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.198"
+          "title": "timedOutAfterMs on auto-backgrounded Bash output",
+          "paragraph": "<code>BashToolOutput</code> now includes <code>timedOutAfterMs</code>, set when a command is automatically backgrounded after running too long.",
+          "whyItMatters": "Your tooling can detect and react to commands that got auto-backgrounded instead of treating them as completed.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.210"
         },
         {
-          "id": "v0.3.186",
-          "chipLabel": "v0.3.186 · Jun 22",
+          "id": "v0.3.202",
+          "chipLabel": "v0.3.202 · Jul 6",
           "chipKind": "feat",
-          "title": "agent_id on permission requests; ReadMcpResourceDirTool; rewind control request",
-          "paragraph": "Permission requests originating from background agents now carry an <code>agent_id</code> so a host can tell which agent is asking. The release also introduces <code>ReadMcpResourceDirTool</code> as a dedicated tool type and a <code>rewind_conversation</code> control request for programmatically stepping a session back.",
-          "whyItMatters": "Hosts orchestrating several background agents can now attribute and route each permission prompt to the right agent instead of treating them as one anonymous stream.",
-          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.186"
+          "title": "parent_agent_id for multi-level agent trees",
+          "paragraph": "Streamed messages now include <code>parent_agent_id</code>, letting you reconstruct multi-level agent trees, alongside a fix for a crash in flag settings.",
+          "whyItMatters": "If you orchestrate nested subagents, you can now attribute each message to its spawning agent for tracing and cost accounting.",
+          "sourceUrl": "https://github.com/anthropics/claude-agent-sdk-typescript/releases/tag/v0.3.202"
         }
       ]
     },
@@ -113,31 +97,22 @@
       "sourceHomeUrl": "https://github.com/openai/codex/releases",
       "entries": [
         {
-          "id": "rust-v0.142.2",
-          "chipLabel": "0.142.2 · Jun 25",
-          "chipKind": "new",
-          "title": "MCP tools use tool search by default; system-proxy auth on macOS; dark-mode plugin logos",
-          "paragraph": "Codex now uses tool search by default when an MCP server supports it, improving tool discovery while staying compatible with older models and providers. macOS authentication clients can honour system proxy, PAC, and WPAD settings when <code>respect_system_proxy</code> is enabled, plugins can ship dedicated dark-mode logos via local manifests and remote catalogs, and apps can render richer safety-buffering UI from server-provided metadata.",
-          "whyItMatters": "Large MCP tool catalogs get discovered by search instead of being dumped into context, and corporate macOS fleets behind a proxy can finally authenticate without manual overrides.",
-          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.142.2"
-        },
-        {
-          "id": "rust-v0.142.5",
-          "chipLabel": "0.142.5 · Jul 1",
-          "chipKind": "safe",
-          "title": "Stop full Responses WebSocket payloads leaking into trace logs",
-          "paragraph": "A fix prevents full Responses WebSocket request payloads from being written to trace logs. Previously, enabling verbose tracing could persist entire request bodies — including their contents — to disk. Backported to the 0.142 release line.",
-          "whyItMatters": "If you run Codex with tracing on, upgrading stops sensitive request payloads from being captured in log files that may be shipped off-box.",
-          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.142.5"
-        },
-        {
-          "id": "rust-v0.142.1",
-          "chipLabel": "0.142.1 · Jun 25",
+          "id": "rust-v0.144.0",
+          "chipLabel": "rust-v0.144.0 · Jul 9",
           "chipKind": "feat",
-          "title": "Opt-in Windows system proxy support for authentication",
-          "paragraph": "Codex adds opt-in Windows system proxy support for authentication, covering PAC and WPAD auto-configuration, static proxies, and bypass rules. This mirrors the macOS proxy support landing in the same release train.",
-          "whyItMatters": "Windows users behind a corporate proxy can now sign in without hand-rolling proxy environment variables.",
-          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.142.1"
+          "title": "MCP interactive auth is GA + new \"writes\" approval mode",
+          "paragraph": "MCP tools can now request interactive authentication without an experimental opt-in, and a new <code>writes</code> app-approval mode allows declared read-only actions while still prompting before writes. Usage-limit reset credits now show their type and expiration.",
+          "whyItMatters": "MCP OAuth flows no longer need an experimental flag, and the <code>writes</code> mode gives a safer default for semi-autonomous runs.",
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.144.0"
+        },
+        {
+          "id": "rust-v0.144.6",
+          "chipLabel": "rust-v0.144.6 · Jul 18",
+          "chipKind": "feat",
+          "title": "GPT-5.6 model metadata + 272k context correction",
+          "paragraph": "Refreshed the bundled instructions for the GPT-5.6 Sol, Terra, and Luna models and corrected their context window to 272,000 tokens.",
+          "whyItMatters": "If you target GPT-5.6 through Codex, the corrected 272k context window changes how much you can safely pack into a single request.",
+          "sourceUrl": "https://github.com/openai/codex/releases/tag/rust-v0.144.6"
         }
       ]
     },
@@ -148,17 +123,31 @@
       "sourceHomeUrl": "https://github.com/openai/openai-node/releases",
       "entries": [
         {
-          "id": "v6.45.0",
-          "chipLabel": "v6.45.0 · Jun 24",
+          "id": "v6.48.0",
+          "chipLabel": "v6.48.0 · Jul 17",
           "chipKind": "feat",
-          "title": "afterCompletion hook for runTools, realtime sideband call_id, stream helpers",
-          "paragraph": "The <code>runTools</code> helper gains an <code>afterCompletion</code> hook that fires after each tool-calling round, the realtime API adds sideband <code>call_id</code> support, and new response stream helper utilities land. Bug fixes address structured-output parsing and stream abort-listener cleanup.",
-          "whyItMatters": "The <code>afterCompletion</code> hook gives you a clean place to log, cost-track, or short-circuit a tool-calling loop between rounds instead of wrapping the whole call.",
-          "example": {
-            "lang": "typescript",
-            "code": "client.chat.completions.runTools({\n  messages, tools,\n  afterCompletion: (completion) => {\n    metrics.record(completion.usage);\n  },\n});"
-          },
-          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.45.0"
+          "title": "Service-account API key endpoint",
+          "paragraph": "Adds a service-account API-key endpoint for programmatic key management and fixes header normalization issues.",
+          "whyItMatters": "You can now create and rotate service-account keys directly through the SDK instead of the dashboard.",
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.48.0"
+        },
+        {
+          "id": "v6.47.0",
+          "chipLabel": "v6.47.0 · Jul 14",
+          "chipKind": "feat",
+          "title": "Async event iterators + streaming file uploads",
+          "paragraph": "Introduces async event iterators, streaming file uploads, and improved stream handling for the Assistants API.",
+          "whyItMatters": "Streaming uploads let you send large files without buffering them fully in memory, cutting peak memory on upload-heavy services.",
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.47.0"
+        },
+        {
+          "id": "v6.46.0",
+          "chipLabel": "v6.46.0 · Jul 9",
+          "chipKind": "new",
+          "title": "GPT-5.6 model support",
+          "paragraph": "Adds support for the GPT-5.6 model family and fixes array-delta placement in the Assistants API streaming responses.",
+          "whyItMatters": "GPT-5.6 is now reachable straight from the Node SDK — no manual model-string plumbing needed.",
+          "sourceUrl": "https://github.com/openai/openai-node/releases/tag/v6.46.0"
         }
       ]
     }
@@ -166,60 +155,64 @@
   "suggestions": [
     {
       "num": 1,
-      "title": "Audit unattended flows for the Manual-mode + AskUserQuestion behavior change",
-      "chipLabel": "behavior change",
-      "chipKind": "break",
-      "paragraph": "Claude Code 2.1.200 renamed the default permission mode to \"Manual\" and stopped <code>AskUserQuestion</code> dialogs from auto-continuing. Any CI job, cron, or headless script that assumed a question would eventually self-resolve will now hang. Configure an explicit idle timeout via <code>/config</code>, or restructure the flow so it never asks a question in unattended mode.",
-      "whyItMatters": "A silently-blocking prompt in an overnight pipeline looks identical to a hang — you find out when the job never finishes.",
+      "title": "Upgrade Claude Code to 2.1.214+ before your next unattended run",
+      "chipLabel": "security · Jul 18",
+      "chipKind": "safe",
+      "paragraph": "2.1.214 patches multiple permission-check bypasses. Any host running Claude Code non-interactively (CI, cron, shared boxes) should pin to <code>&gt;=2.1.214</code> and re-verify that allow/deny rules still behave as intended.",
+      "whyItMatters": "Permission bypasses are exactly the class of bug you don't want live in an automated agent that has shell access.",
       "example": {
         "lang": "bash",
-        "code": "# both spellings accepted; be explicit in scripts\nclaude --permission-mode manual -p \"...\""
+        "code": "npm i -g @anthropic-ai/claude-code@latest\nclaude --version   # expect >= 2.1.214"
       },
-      "tiesTo": "claude-code · 2.1.200 · Jul 3 — Default permission mode renamed to \"Manual\"; AskUserQuestion no longer auto-continues"
+      "tiesTo": "claude-code · 2.1.214 · Jul 18 — permission-check security fixes"
     },
     {
       "num": 2,
-      "title": "Pin OTEL_LOG_ASSISTANT_RESPONSES=0 before upgrading if you ship telemetry",
-      "chipLabel": "privacy",
-      "chipKind": "safe",
-      "paragraph": "The new <code>claude_code.assistant_response</code> OTel event follows <code>OTEL_LOG_USER_PROMPTS</code> when its own flag is unset. If your service already logs prompt content to a shared observability backend, upgrading will start exporting full model responses too. Set <code>OTEL_LOG_ASSISTANT_RESPONSES=0</code> in the environment before rolling out the new version.",
-      "whyItMatters": "Model responses can contain code, secrets, and customer data — you do not want them landing in a telemetry pipeline by accident.",
+      "title": "Pin the permission mode for any cloud-backend agent run",
+      "chipLabel": "break · Jul 11",
+      "chipKind": "break",
+      "paragraph": "Auto mode is now on by default on Bedrock, Vertex, and Foundry. If your service runs agents against those backends, set the permission mode explicitly rather than relying on the default, so a version bump can't silently widen autonomy.",
+      "whyItMatters": "A default that flips under you is a change in how much autonomy you grant — keep it in version control, not implicit.",
       "example": {
         "lang": "bash",
-        "code": "# in your deploy env / Dockerfile\nENV OTEL_LOG_ASSISTANT_RESPONSES=0"
+        "code": "# be explicit instead of inheriting the new default\nclaude --permission-mode manual ..."
       },
-      "tiesTo": "claude-code · 2.1.193 · Jun 25 — New OTel event logs the model's response text on upgrade"
+      "tiesTo": "claude-code · 2.1.207 · Jul 11 — auto mode default on Bedrock/Vertex/Foundry"
     },
     {
       "num": 3,
-      "title": "Upgrade Codex to 0.142.5 if you run it with tracing enabled",
-      "chipLabel": "security",
-      "chipKind": "safe",
-      "paragraph": "Codex 0.142.5 stops full Responses WebSocket request payloads from being written to trace logs. If any of your machines run Codex with verbose tracing on — CI runners, shared dev boxes — those logs may already contain complete request bodies. Upgrade, then rotate anything that may have been captured.",
-      "whyItMatters": "Trace files are routinely shipped to central logging, so a payload leak here can quietly widen the blast radius of a single request.",
-      "tiesTo": "Codex · 0.142.5 · Jul 1 — Stop full Responses WebSocket payloads leaking into trace logs"
+      "title": "Validate permissionMode config strings against the known set",
+      "chipLabel": "break · Jul 18",
+      "chipKind": "break",
+      "paragraph": "v0.3.214 rejects unknown <code>permissionMode</code> values instead of ignoring them. If you build that string from user or file config, validate it against the known set at your own boundary so you fail with a clear message rather than a stack trace at startup.",
+      "whyItMatters": "It turns a silent no-op that used to mask typos into a loud failure — catch it where you have context, not where the SDK does.",
+      "example": {
+        "lang": "ts",
+        "code": "const MODES = ['manual','acceptEdits','plan','auto'] as const;\nif (!MODES.includes(mode as any)) {\n  throw new Error(`unknown permissionMode: ${mode}`);\n}"
+      },
+      "tiesTo": "Claude Agent SDK · v0.3.214 · Jul 18 — rejects unrecognized permission modes"
     },
     {
       "num": 4,
-      "title": "Plan a Sonnet 5 migration and lock in the promo pricing window",
-      "chipLabel": "model",
-      "chipKind": "new",
-      "paragraph": "Claude Sonnet 5 is now the default with a 1M-token context window and promotional pricing of $2/$10 per Mtok through August 31. If your service pins a model, test Sonnet 5 against your evals now; if it does not pin, be aware that a fresh install already runs Sonnet 5, which changes both cost and long-context behavior. Budget for the price step-up after the promo ends.",
-      "whyItMatters": "A larger default context window quietly raises per-run token cost, and the promo window is a finite chance to benchmark cheaply.",
-      "tiesTo": "claude-code · 2.1.197 · Jun 30 — Claude Sonnet 5 is the new default model (1M context)"
+      "title": "Drop the experimental flag from your MCP OAuth flow",
+      "chipLabel": "feat · Jul 9",
+      "chipKind": "feat",
+      "paragraph": "Codex 0.144.0 makes interactive MCP authentication generally available. If you gated MCP OAuth behind an experimental opt-in, you can remove that flag and simplify onboarding for your users.",
+      "whyItMatters": "One less experimental toggle in your config is one less thing that breaks when upstream defaults change.",
+      "tiesTo": "Codex · rust-v0.144.0 · Jul 9 — MCP interactive auth GA"
     },
     {
       "num": 5,
-      "title": "Correlate SDK permission decisions with requestId and use masked credential injection",
-      "chipLabel": "SDK",
+      "title": "Stream large file uploads to OpenAI instead of buffering them",
+      "chipLabel": "feat · Jul 14",
       "chipKind": "feat",
-      "paragraph": "If your service embeds the Claude Agent SDK, read the new <code>requestId</code> in your <code>canUseTool</code> callback and stamp it onto your audit log so every allow/deny ties back to a concrete request. For sandboxed steps that need a secret, switch to masked credential injection (SDK v0.3.199) so the value is available to the command but never rendered into logs or transcripts.",
-      "whyItMatters": "Auditable, per-request permission decisions and leak-proof secret handling are exactly what a security review of an agent integration will ask for.",
+      "paragraph": "v6.47.0 supports streaming file uploads. For any Node service that forwards user files to OpenAI, pipe a read stream straight through instead of reading the whole file into a Buffer first.",
+      "whyItMatters": "Buffering large files in memory is a top cause of OOM crashes in upload endpoints; streaming keeps memory flat regardless of file size.",
       "example": {
-        "lang": "typescript",
-        "code": "canUseTool: async (tool, input, { requestId }) => {\n  auditLog.push({ requestId, tool, at: Date.now() });\n  return { behavior: 'allow', updatedInput: input };\n}"
+        "lang": "ts",
+        "code": "import fs from 'node:fs';\nawait client.files.create({\n  file: fs.createReadStream('./big.pdf'),\n  purpose: 'assistants',\n});"
       },
-      "tiesTo": "Claude Agent SDK · v0.3.199 · Jul 2 — requestId on permission callbacks, blocked workflow events, masked credential injection"
+      "tiesTo": "OpenAI Node SDK · v6.47.0 · Jul 14 — streaming file uploads"
     }
   ]
 }
